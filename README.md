@@ -1,8 +1,3 @@
-<a href="https://github.com/quintuslabs/CampusHub"><img src="screen/logo.png" height="150px" width="150px" title="CampusHub" alt="Campus Hub"></a>
-
-* [CampusHub](https://github.com/quintuslabs/CampusHub/blob/master/CampusHub1.0.apk) - Download APK
-
-
 # CampusHub
 CampusHub App, is online shopping UI Kit, geniune mobile application to which you can rely on. It guides you to formulate incredible mobile application. It comprise of 10+ screens with different features to navigate screens easily.
 Various different screens are assembled to  construct systematic structure. Moreover, Design and XML code file compose of various explicit comments that can help your client to construct application more effortlessly.
@@ -38,15 +33,4 @@ The screen contains more than 60 icons and most of all required elements require
 
 ## Screen 
 
-<img src="screen/screen1.png">
-
-<img src="screen/screen2.png">
-
-<img src="screen/screen3.png">
-
-<img src="screen/screen4.png">
-
-<img src="screen/screen5.png">
-
-<img src="screen/screen6.png">
 "# CampusHub-Andoroid" 
