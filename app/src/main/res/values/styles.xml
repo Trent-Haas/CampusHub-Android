@@ -1,9 +1,9 @@
 <resources>
     <!--
-       * Grocery App
-       * https://github.com/quintuslabs/GroceryStore
+       * CampusHub App
+       * https://github.com/quintuslabs/CampusHub
        * Created on 18-Feb-2019.
-       * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
+       * Created by : :- http://santoshdash.epizy.com
        -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

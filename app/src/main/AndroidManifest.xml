@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.quintus.labs.grocerystore">
+    package="com.semo.cisproject.campushub">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.WelcomeActivity"
+            android:name="com.semo.cisproject.campushub.activity.WelcomeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -30,19 +30,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.semo.cisproject.campushub.activity.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.BaseActivity" />
+        <activity android:name="com.semo.cisproject.campushub.activity.BaseActivity" />
         <activity
-            android:name=".activity.ProductActivity"
+            android:name="com.semo.cisproject.campushub.activity.ProductActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-            android:name=".activity.LoginRegisterActivity"
+            android:name="com.semo.cisproject.campushub.activity.LoginRegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".activity.CartActivity" />
-        <activity android:name=".activity.CheckoutActivity" />
-        <activity android:name=".activity.ProductViewActivity"></activity>
+        <activity android:name="com.semo.cisproject.campushub.activity.CartActivity" />
+        <activity android:name="com.semo.cisproject.campushub.activity.CheckoutActivity" />
+        <activity android:name="com.semo.cisproject.campushub.activity.ProductViewActivity"></activity>
     </application>
 
 </manifest>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!--
-    * Grocery App
-    * https://github.com/quintuslabs/GroceryStore
+    * CampusHub App
+    * https://github.com/quintuslabs/CampusHub
     * Created on 18-Feb-2019.
-    * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
+    * Created by : :- http://santoshdash.epizy.com
     -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -91,7 +91,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.quintus.labs.grocerystore.customfonts.MyTextViewMeriendaRegular
+                <com.semo.cisproject.campushub.customfonts.MyTextViewMeriendaRegular
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Total : "
@@ -100,7 +100,7 @@
                     android:textStyle="bold"
                     android:visibility="gone" />
 
-                <com.quintus.labs.grocerystore.customfonts.MyTextViewMeriendaRegular
+                <com.semo.cisproject.campushub.customfonts.MyTextViewMeriendaRegular
                     android:id="@+id/total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                 android:onClick="onCheckoutClicked"
                 android:orientation="horizontal">
 
-                <com.quintus.labs.grocerystore.customfonts.MyTextViewMeriendaRegular
+                <com.semo.cisproject.campushub.customfonts.MyTextViewMeriendaRegular
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Checkout "

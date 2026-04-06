@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   * Grocery App
-   * https://github.com/quintuslabs/GroceryStore
+   * CampusHub App
+   * https://github.com/quintuslabs/CampusHub
    * Created on 18-Feb-2019.
-   * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
+   * Created by : :- http://santoshdash.epizy.com
    -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                         android:layout_height="20dp"
                         android:background="@drawable/ic_placeholder" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextView
+                    <com.semo.cisproject.campushub.customfonts.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Adderss"
@@ -60,7 +60,7 @@
                         android:layout_height="20dp"
                         android:background="@drawable/ic_credit_card_unselect" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextView
+                    <com.semo.cisproject.campushub.customfonts.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Payment"
@@ -80,7 +80,7 @@
                         android:layout_height="20dp"
                         android:background="@drawable/ic_confirm_unselect" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextView
+                    <com.semo.cisproject.campushub.customfonts.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Confirm"

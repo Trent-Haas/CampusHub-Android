@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   * Grocery App
-   * https://github.com/quintuslabs/GroceryStore
+   * CampusHub App
+   * https://github.com/quintuslabs/CampusHub
    * Created on 18-Feb-2019.
-   * Created by : Santosh Kumar Dash:- http://santoshdash.epizy.com
+   * Created by : :- http://santoshdash.epizy.com
    -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -80,16 +80,16 @@
                     android:layout_margin="10dp"
                     android:orientation="horizontal">
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansBold
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Name :" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansRegular
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansRegular
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Santosh Kumar Dash" />
+                        android:text="" />
                 </LinearLayout>
 
                 <View
@@ -103,12 +103,12 @@
                     android:layout_margin="10dp"
                     android:orientation="horizontal">
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansBold
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Email :" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansRegular
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansRegular
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -126,12 +126,12 @@
                     android:layout_margin="10dp"
                     android:orientation="horizontal">
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansBold
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mobile :" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansRegular
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansRegular
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -149,12 +149,12 @@
                     android:layout_margin="10dp"
                     android:orientation="horizontal">
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansBold
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Address :" />
 
-                    <com.quintus.labs.grocerystore.customfonts.MyTextViewSansRegular
+                    <com.semo.cisproject.campushub.customfonts.MyTextViewSansRegular
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
