@@ -4,37 +4,43 @@ package com.semo.cisproject.campushub.model;
 public class Product {
     String id;
     String categoryId;
+    String department;
     String title;
     String description;
     String attribute;
     String currency;
     String price;
-    String discount;
+    String discount_percent;
+    int stock_quantity;
     String image;
 
     public Product() {
     }
 
-    public Product(String id, String categoryId, String title, String description, String attribute, String price, String discount, String image) {
+    public Product(String id, String categoryId, String department, String title, String description, String attribute, String price, String discount_percent, int stock_quantity, String image) {
         this.id = id;
         this.categoryId = categoryId;
+        this.department = department;
         this.title = title;
         this.description = description;
         this.attribute = attribute;
         this.price = price;
-        this.discount = discount;
+        this.discount_percent = discount_percent;
+        this.stock_quantity = stock_quantity;
         this.image = image;
     }
 
-    public Product(String id, String categoryId, String title, String description, String attribute, String currency, String price, String discount, String image) {
+    public Product(String id, String categoryId, String department, String title, String description, String attribute, String currency, String price, String discount_percent, int stock_quantity, String image) {
         this.id = id;
         this.categoryId = categoryId;
+        this.department = department;
         this.title = title;
         this.description = description;
         this.attribute = attribute;
         this.currency = currency;
         this.price = price;
-        this.discount = discount;
+        this.discount_percent = discount_percent;
+        this.stock_quantity = stock_quantity;
         this.image = image;
     }
 
@@ -52,6 +58,14 @@ public class Product {
 
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getTitle() {
@@ -86,12 +100,20 @@ public class Product {
         this.price = price;
     }
 
-    public String getDiscount() {
-        return discount;
+    public String getDiscountPercent() {
+        return discount_percent;
     }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
+    public void setDiscountPercent(String discount_percent) {
+        this.discount_percent = discount_percent;
+    }
+
+    public int getStockQuantity() {
+        return stock_quantity;
+    }
+
+    public void setStockQuantity(int stock_quantity) {
+        this.stock_quantity = stock_quantity;
     }
 
     public String getImage() {
