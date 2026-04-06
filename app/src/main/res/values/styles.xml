@@ -1,9 +1,6 @@
 <resources>
     <!--
-       * CampusHub App
-       * https://github.com/quintuslabs/CampusHub
-       * Created on 18-Feb-2019.
-       * Created by : :- http://santoshdash.epizy.com
+    *CampusHub
        -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

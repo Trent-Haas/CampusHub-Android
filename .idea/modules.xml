@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GroceryStore-master.iml" filepath="$PROJECT_DIR$/.idea/modules/GroceryStore-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GroceryStore-master.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GroceryStore-master.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CampusHub-Master.iml" filepath="$PROJECT_DIR$/.idea/modules/CampusHub-Master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CampusHub-Master.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CampusHub-Master.app.iml" />
     </modules>
   </component>
 </project>

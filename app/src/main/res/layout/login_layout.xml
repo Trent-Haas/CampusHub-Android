@@ -1,8 +1,5 @@
 <!--
-   * CampusHub App
-   * https://github.com/quintuslabs/CampusHub
-   * Created on 18-Feb-2019.
-   * Created by : :- http://santoshdash.epizy.com
+*CampusHub
    -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

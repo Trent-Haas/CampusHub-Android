@@ -1,9 +1,6 @@
 <resources>
     <!--
-   * CampusHub App
-   * https://github.com/quintuslabs/CampusHub
-   * Created on 18-Feb-2019.
-   * Created by : :- http://santoshdash.epizy.com
+*CampusHub
    -->
     <string name="app_name">Campus Hub</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
