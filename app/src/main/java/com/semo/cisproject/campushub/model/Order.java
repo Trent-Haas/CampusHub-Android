@@ -7,17 +7,20 @@ public class Order {
     String date;
     String total;
     String status;
-
+    String pickup_location;
+    String address_id;
 
     public Order() {
     }
 
-    public Order(String id, String orderId, String date, String total, String status) {
+    public Order(String id, String orderId, String date, String total, String status, String pickup_location, String address_id) {
         this.id = id;
         this.orderId = orderId;
         this.date = date;
         this.total = total;
         this.status = status;
+        this.pickup_location = pickup_location;
+        this.address_id = address_id;
     }
 
     public String getId() {
@@ -58,5 +61,21 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPickupLocation() {
+        return pickup_location;
+    }
+
+    public void setPickupLocation(String pickup_location) {
+        this.pickup_location = pickup_location;
+    }
+
+    public String getAddressId() {
+        return address_id;
+    }
+
+    public void setAddressId(String address_id) {
+        this.address_id = address_id;
     }
 }

@@ -3,20 +3,24 @@ package com.semo.cisproject.campushub.model;
 
 public class User {
     String id;
+    String student_id;
     String name;
     String email;
     String mobile;
     String password;
+    String discount_tier; // "none", "student", "faculty", "staff"
 
     public User() {
     }
 
-    public User(String id, String name, String email, String mobile, String password) {
+    public User(String id, String student_id, String name, String email, String mobile, String password, String discount_tier) {
         this.id = id;
+        this.student_id = student_id;
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.password = password;
+        this.discount_tier = discount_tier;
     }
 
     public String getId() {
@@ -25,6 +29,22 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getStudentId() {
+        return student_id;
+    }
+
+    public void setStudentId(String student_id) {
+        this.student_id = student_id;
+    }
+
+    public String getDiscountTier() {
+        return discount_tier;
+    }
+
+    public void setDiscountTier(String discount_tier) {
+        this.discount_tier = discount_tier;
     }
 
     public String getName() {
