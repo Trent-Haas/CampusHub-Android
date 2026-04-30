@@ -22,10 +22,10 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     // --- Auth ---
-    @POST("auth/login")
+    @POST("auth/login.php")
     Call<User> login(@Body LoginRequest body);
 
-    @POST("auth/register")
+    @POST("auth/register.php")
     Call<User> register(@Body User user);
 
     // --- Users ---
@@ -80,11 +80,11 @@ public interface ApiService {
 
     class LoginRequest {
         public String email;
-        public String password;
+        public String password_hash;
 
-        public LoginRequest(String email, String password) {
+        public LoginRequest(String email, String password_hash) {
             this.email = email;
-            this.password = password;
+            this.password_hash = password_hash;
         }
     }
 

@@ -1,12 +1,12 @@
 package com.semo.cisproject.campushub.fragment;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -21,46 +21,49 @@ import com.semo.cisproject.campushub.model.Order;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MyOrderFragment extends Fragment {
-    LocalStorage localStorage;
-    LinearLayout linearLayout;
+
     private List<Order> orderList = new ArrayList<>();
     private RecyclerView recyclerView;
     private OrderAdapter mAdapter;
+    private LinearLayout noOrderLayout;
 
     public MyOrderFragment() {
-        // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_order, container, false);
 
         recyclerView = view.findViewById(R.id.order_rv);
-        orderList = ((BaseActivity) getActivity()).getOrderList();
+        noOrderLayout = view.findViewById(R.id.no_order_ll);
+
+        if (getActivity() instanceof BaseActivity) {
+            orderList = ((BaseActivity) getActivity()).getOrderList();
+        }
+
         mAdapter = new OrderAdapter(orderList, getContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-        linearLayout = view.findViewById(R.id.no_order_ll);
+
         if (orderList.isEmpty()) {
-            linearLayout.setVisibility(View.VISIBLE);
+            noOrderLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            noOrderLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("MyOrder");
+        if (getActivity() != null) {
+            getActivity().setTitle("My Orders");
+        }
     }
 }

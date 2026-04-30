@@ -1,145 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <!--
- *CampusHub
-    -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroungColor"
-    tools:context=".activity.CartActivity">
+    android:background="@color/white">
 
+    <include
+        android:id="@+id/toolbar_cart"
+        layout="@layout/app_bar_main" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/bg_3" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bg_2" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/bg_1" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/graphe" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cart_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#D3FFFFFF" />
+        android:layout_above="@+id/cart_bottom_bar"
+        android:layout_below="@id/toolbar_cart"
+        android:padding="8dp" />
 
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/cart_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/cart_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="50dp">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="49dp"
-            android:background="@color/cardBorderColor" />
-
-        <LinearLayout
-            android:id="@+id/checkout_LL"
-            android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:layout_alignParentBottom="true"
-            android:elevation="20dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <com.semo.cisproject.campushub.customfonts.MyTextViewMeriendaRegular
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total : "
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <com.semo.cisproject.campushub.customfonts.MyTextViewMeriendaRegular
-                    android:id="@+id/total_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$12"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:onClick="onCheckoutClicked"
-                android:orientation="horizontal">
-
-                <com.semo.cisproject.campushub.customfonts.MyTextViewMeriendaRegular
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Checkout "
-                    android:textColor="@color/white"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/empty_cart_img"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/empty_cart_img"
-        android:visibility="gone" />
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/card_highlight_gradient"
+        android:orientation="horizontal"
+        android:padding="20dp">
 
+        <TextView
+            android:id="@+id/total_cart_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Total: $0.00"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/checkout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/highlight_pill_bg"
+            android:paddingHorizontal="20dp"
+            android:text="Checkout"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
 </RelativeLayout>

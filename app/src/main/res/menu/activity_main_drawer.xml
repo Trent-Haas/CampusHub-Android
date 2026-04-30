@@ -51,7 +51,7 @@
             android:title="My Order" />
         <item
             android:id="@+id/nav_my_cart"
-            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:icon="@drawable/ic_shopping_cart"
             android:title="My Cart" />
     </group>
 

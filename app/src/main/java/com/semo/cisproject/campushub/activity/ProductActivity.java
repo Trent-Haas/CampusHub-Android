@@ -1,12 +1,12 @@
 package com.semo.cisproject.campushub.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,133 +23,154 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.adapter.ProductAdapter;
 import com.semo.cisproject.campushub.helper.Converter;
+import com.semo.cisproject.campushub.model.Product;
+import com.semo.cisproject.campushub.network.ApiCallback;
+import com.semo.cisproject.campushub.repository.ProductRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductActivity extends BaseActivity {
-    private static int cart_count = 0;
-    Data data;
-    ProductAdapter mAdapter;
-    String Tag = "List";
-    private RecyclerView recyclerView;
 
-    @SuppressLint("ResourceAsColor")
+    private RecyclerView recyclerView;
+    private ProductAdapter mAdapter;
+    private List<Product> productList = new ArrayList<>();
+    private String viewTypeTag = "List";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
-        changeActionBarTitle(getSupportActionBar());
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
-        //upArrow.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
-        cart_count = cartCount();
+        setupToolbar();
+
         recyclerView = findViewById(R.id.product_rv);
-        data = new Data();
-        setUpRecyclerView();
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        loadMarketplaceData();
     }
 
-    private void changeActionBarTitle(ActionBar actionBar) {
-        // Create a LayoutParams for TextView
+    private void setupToolbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+            actionBar.setHomeAsUpIndicator(upArrow);
+
+            applyCustomTitle(actionBar, "Campus Marketplace");
+        }
+    }
+
+    private void applyCustomTitle(ActionBar actionBar, String title) {
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, // Width of TextView
-                RelativeLayout.LayoutParams.WRAP_CONTENT); // Height of TextView
-        TextView tv = new TextView(getApplicationContext());
-        // Apply the layout parameters to TextView widget
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        TextView tv = new TextView(this);
         tv.setLayoutParams(lp);
         tv.setGravity(Gravity.CENTER);
-        tv.setTypeface(null, Typeface.BOLD);
-        // Set text to display in TextView
-        tv.setText("Products"); // ActionBar title text
+
+        try {
+            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Merienda-Bold.ttf");
+            tv.setTypeface(tf);
+        } catch (Exception e) {
+            tv.setTypeface(null, Typeface.BOLD);
+        }
+
+        tv.setText(title);
         tv.setTextSize(20);
+        tv.setTextColor(getResources().getColor(R.color.colorPrimary));
 
-        // Set the text color of TextView to red
-        // This line change the ActionBar title text color
-        tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-
-        // Set the ActionBar display option
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        // Finally, set the newly created TextView as ActionBar custom view
         actionBar.setCustomView(tv);
     }
 
-    private void setUpRecyclerView() {
-        data = new Data();
-        mAdapter = new ProductAdapter(data.getProductList(), ProductActivity.this, Tag);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+    private void loadMarketplaceData() {
+        showProgress("Loading Marketplace...");
 
+        ProductRepository repository = new ProductRepository();
+        repository.getProducts(new ApiCallback<List<Product>>() {
+            @Override
+            public void onSuccess(List<Product> result) {
+                hideProgress();
+                productList = result;
+                updateAdapter();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                hideProgress();
+                Log.e("API_ERROR", "Database connection failed: " + errorMessage);
+            }
+        });
     }
 
-    private void setUpGridRecyclerView() {
-        data = new Data();
-        mAdapter = new ProductAdapter(data.getProductList(), ProductActivity.this, Tag);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    private void updateAdapter() {
+        mAdapter = new ProductAdapter(productList, ProductActivity.this, viewTypeTag);
         recyclerView.setAdapter(mAdapter);
-
     }
 
+    /**
+     * Logic to toggle between Single-Column List and Two-Column Grid.
+     */
     public void onToggleClicked(View view) {
-        if (Tag.equalsIgnoreCase("List")) {
-            Tag = "Grid";
-            setUpGridRecyclerView();
+        if (viewTypeTag.equalsIgnoreCase("List")) {
+            viewTypeTag = "Grid";
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
-            Tag = "List";
-            setUpRecyclerView();
+            viewTypeTag = "List";
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
+        updateAdapter();
     }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // todo: goto back activity from here
-
-                Intent intent = new Intent(ProductActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-                return true;
-
-            case R.id.cart_action:
-                startActivity(new Intent(getApplicationContext(), CartActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.cart_action);
-        menuItem.setIcon(Converter.convertLayoutToImage(ProductActivity.this, cart_count, R.drawable.ic_shopping_basket));
+
+        menuItem.setIcon(Converter.convertLayoutToImage(
+                ProductActivity.this,
+                getCartCount(),
+                R.drawable.ic_shopping_basket));
+
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (id == R.id.cart_action) {
+            startActivity(new Intent(this, CartActivity.class));
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onAddProduct() {
-        cart_count++;
         invalidateOptionsMenu();
-
     }
 
     @Override
     public void onRemoveProduct() {
-        cart_count--;
         invalidateOptionsMenu();
-
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
 }

@@ -1,20 +1,17 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class Cart {
-    String id;
-    String image;
-    String title;
-    String currency;
-    String price;
-    String attribute;
-    String quantity;
-    String subTotal;
-
+    private String id;
+    private String image;
+    private String title;
+    private String currency;
+    private String price;
+    private String attribute;
+    private String quantity;
+    private String subTotal;
 
     public Cart() {
     }
-
 
     public Cart(String id, String title, String image, String currency, String price, String attribute, String quantity, String subTotal) {
         this.id = id;

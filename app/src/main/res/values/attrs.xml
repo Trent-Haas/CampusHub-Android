@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-*CampusHub
-   -->
 <resources>
-    <declare-styleable name="gif_view">
+    <declare-styleable name="GifView">
         <attr name="starting_on_init" format="boolean" />
         <attr name="on_click_start_or_pause" format="boolean" />
         <attr name="delay_in_millis" format="integer" />
-        <attr name="gif_src" format="string" />
+        <attr name="gif_src" format="reference|string" />
     </declare-styleable>
 </resources>

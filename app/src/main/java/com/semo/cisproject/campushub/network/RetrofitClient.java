@@ -7,8 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    // TODO: Replace with your actual backend base URL before connecting a server
-    private static final String BASE_URL = "https://your.api.base.url/api/";
+    private static final String BASE_URL = "http://10.0.2.2/campushub/api/";
 
     private static RetrofitClient instance;
     private final ApiService apiService;

@@ -1,16 +1,23 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class Order {
-    String id;
-    String orderId;
-    String date;
-    String total;
-    String status;
-    String pickup_location;
-    String address_id;
+    private String id;
+    private String orderId;
+    private String date;
+    private String total;
+    private String status;
+    private String pickup_location;
+    private String address_id;
 
     public Order() {
+    }
+
+    public Order(String id, String orderId, String date, String total, String status) {
+        this.id = id;
+        this.orderId = orderId;
+        this.date = date;
+        this.total = total;
+        this.status = status;
     }
 
     public Order(String id, String orderId, String date, String total, String status, String pickup_location, String address_id) {

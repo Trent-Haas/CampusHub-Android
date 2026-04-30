@@ -22,12 +22,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
-    List<Category> categoryList;
-    Context context;
-    String Tag;
+    private List<Category> categoryList;
+    private Context context;
+    private String tag;
 
     public CategoryAdapter(List<Category> categoryList, Context context) {
         this.categoryList = categoryList;
@@ -37,33 +36,33 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public CategoryAdapter(List<Category> categoryList, Context context, String tag) {
         this.categoryList = categoryList;
         this.context = context;
-        Tag = tag;
+        this.tag = tag;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
-        if (Tag.equalsIgnoreCase("Home")) {
+        if (tag != null && tag.equalsIgnoreCase("Home")) {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_home_category, parent, false);
         } else {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_category, parent, false);
         }
-
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+        final Category category = categoryList.get(position);
 
-        Category category = categoryList.get(position);
         holder.title.setText(category.getTitle());
-        if (Tag.equalsIgnoreCase("Category")) {
+
+        if (category.getImage() != null && !category.getImage().isEmpty()) {
             Picasso.get()
                     .load(category.getImage())
+                    .placeholder(R.drawable.no_image)
                     .into(holder.imageView, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -72,44 +71,36 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
                         @Override
                         public void onError(Exception e) {
-                            Log.d("Error : ", e.getMessage());
+                            holder.progressBar.setVisibility(View.GONE);
+                            Log.e("Picasso", "Category image failed: " + e.getMessage());
                         }
                     });
+        } else {
+            holder.progressBar.setVisibility(View.GONE);
         }
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ProductActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);
-            }
-        });
+        View.OnClickListener clickListener = v -> {
+            Intent intent = new Intent(context, ProductActivity.class);
+            intent.putExtra("category_id", category.getId());
+            intent.putExtra("category_title", category.getTitle());
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent);
+        };
 
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ProductActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);
-            }
-        });
-
+        holder.cardView.setOnClickListener(clickListener);
+        holder.title.setOnClickListener(clickListener);
     }
 
     @Override
     public int getItemCount() {
-        if (Tag.equalsIgnoreCase("Home") && categoryList.size() < 6 && categoryList.size() > 3) {
-            return 3;
-        } else if (Tag.equalsIgnoreCase("Home") && categoryList.size() >= 6) {
-            return 6;
-        } else {
-            return categoryList.size();
+        if (tag != null && tag.equalsIgnoreCase("Home")) {
+            if (categoryList.size() >= 6) return 6;
+            if (categoryList.size() > 3) return 3;
         }
-
+        return categoryList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView title;
         ProgressBar progressBar;
@@ -117,7 +108,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.category_image);
             title = itemView.findViewById(R.id.category_title);
             progressBar = itemView.findViewById(R.id.progressbar);

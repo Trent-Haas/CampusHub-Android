@@ -4,62 +4,50 @@ import android.content.Context;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
+import androidx.annotation.NonNull;
+
 import com.semo.cisproject.campushub.R;
 
-
+/**
+ * Utility class for handling view-level slide animations.
+ * Provides a standardized way to transition elements within the CampusHub marketplace.
+ */
 public class SlideAnimationUtil {
 
     /**
-     * Animates a view so that it slides in from the left of it's container.
-     *
-     * @param context
-     * @param view
+     * Animates a view so that it slides in from the left of its container.
      */
-    public static void slideInFromLeft(Context context, View view) {
+    public static void slideInFromLeft(@NonNull Context context, @NonNull View view) {
         runSimpleAnimation(context, view, R.anim.slide_from_left);
     }
 
     /**
-     * Animates a view so that it slides from its current position, out of view to the left.
-     *
-     * @param context
-     * @param view
+     * Animates a view so that it slides out of view to the left.
      */
-    public static void slideOutToLeft(Context context, View view) {
+    public static void slideOutToLeft(@NonNull Context context, @NonNull View view) {
         runSimpleAnimation(context, view, R.anim.slide_to_left);
     }
 
     /**
-     * Animates a view so that it slides in the from the right of it's container.
-     *
-     * @param context
-     * @param view
+     * Animates a view so that it slides in from the right of its container.
      */
-    public static void slideInFromRight(Context context, View view) {
+    public static void slideInFromRight(@NonNull Context context, @NonNull View view) {
         runSimpleAnimation(context, view, R.anim.slide_from_right);
     }
 
     /**
-     * Animates a view so that it slides from its current position, out of view to the right.
-     *
-     * @param context
-     * @param view
+     * Animates a view so that it slides out of view to the right.
      */
-    public static void slideOutToRight(Context context, View view) {
+    public static void slideOutToRight(@NonNull Context context, @NonNull View view) {
         runSimpleAnimation(context, view, R.anim.slide_to_right);
     }
 
     /**
-     * Runs a simple animation on a View with no extra parameters.
-     *
-     * @param context
-     * @param view
-     * @param animationId
+     * Internal helper to load and execute an animation on a specific View.
      */
     private static void runSimpleAnimation(Context context, View view, int animationId) {
-        view.startAnimation(AnimationUtils.loadAnimation(
-                context, animationId
-        ));
+        if (context != null && view != null) {
+            view.startAnimation(AnimationUtils.loadAnimation(context, animationId));
+        }
     }
-
 }

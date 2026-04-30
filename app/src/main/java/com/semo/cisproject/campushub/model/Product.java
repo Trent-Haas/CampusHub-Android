@@ -1,36 +1,24 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class Product {
-    String id;
-    String categoryId;
-    String department;
-    String title;
-    String description;
-    String attribute;
-    String currency;
-    String price;
-    String discount_percent;
-    int stock_quantity;
-    String image;
+    private String id;
+    private String categoryId;
+    private String department;
+    private String title;
+    private String description;
+    private String attribute;
+    private String currency;
+    private String price;
+    private String discount;
+    private int stock;
+    private String image;
 
     public Product() {
     }
 
-    public Product(String id, String categoryId, String department, String title, String description, String attribute, String price, String discount_percent, int stock_quantity, String image) {
-        this.id = id;
-        this.categoryId = categoryId;
-        this.department = department;
-        this.title = title;
-        this.description = description;
-        this.attribute = attribute;
-        this.price = price;
-        this.discount_percent = discount_percent;
-        this.stock_quantity = stock_quantity;
-        this.image = image;
-    }
-
-    public Product(String id, String categoryId, String department, String title, String description, String attribute, String currency, String price, String discount_percent, int stock_quantity, String image) {
+    public Product(String id, String categoryId, String department, String title, String description,
+                   String attribute, String currency, String price, String discount,
+                   int stock, String image) {
         this.id = id;
         this.categoryId = categoryId;
         this.department = department;
@@ -39,8 +27,8 @@ public class Product {
         this.attribute = attribute;
         this.currency = currency;
         this.price = price;
-        this.discount_percent = discount_percent;
-        this.stock_quantity = stock_quantity;
+        this.discount = discount;
+        this.stock = stock;
         this.image = image;
     }
 
@@ -100,20 +88,20 @@ public class Product {
         this.price = price;
     }
 
-    public String getDiscountPercent() {
-        return discount_percent;
+    public String getDiscount() {
+        return discount;
     }
 
-    public void setDiscountPercent(String discount_percent) {
-        this.discount_percent = discount_percent;
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 
-    public int getStockQuantity() {
-        return stock_quantity;
+    public int getStock() {
+        return stock;
     }
 
-    public void setStockQuantity(int stock_quantity) {
-        this.stock_quantity = stock_quantity;
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public String getImage() {

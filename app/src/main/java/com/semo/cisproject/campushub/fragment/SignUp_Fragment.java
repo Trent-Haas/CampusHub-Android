@@ -15,72 +15,57 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
-
 import com.google.gson.Gson;
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.activity.LoginRegisterActivity;
 import com.semo.cisproject.campushub.activity.MainActivity;
 import com.semo.cisproject.campushub.model.User;
 import com.semo.cisproject.campushub.util.CustomToast;
+import com.semo.cisproject.campushub.util.SecurityUtils;
 import com.semo.cisproject.campushub.util.Utils;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class SignUp_Fragment extends Fragment implements OnClickListener {
     private static View view;
-    private static EditText fullName, emailId, mobileNumber,
-            password;
+    private static EditText fullName, emailId, mobileNumber, password;
     private static TextView login;
     private static Button signUpButton;
     private static CheckBox terms_conditions;
-    ProgressDialog progressDialog;
-    User user;
-    LocalStorage localStorage;
-    Gson gson;
+    private ProgressDialog progressDialog;
+    private User user;
+    private LocalStorage localStorage;
+    private Gson gson;
 
-    public SignUp_Fragment() {
-
-    }
+    public SignUp_Fragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.signup_layout, container, false);
         initViews();
         setListeners();
         return view;
     }
 
-    // Initialize all views
     private void initViews() {
         fullName = view.findViewById(R.id.fullName);
         emailId = view.findViewById(R.id.userEmailId);
         mobileNumber = view.findViewById(R.id.mobileNumber);
-
         password = view.findViewById(R.id.password);
-
         signUpButton = view.findViewById(R.id.signUpBtn);
         login = view.findViewById(R.id.already_user);
         terms_conditions = view.findViewById(R.id.terms_conditions);
         progressDialog = new ProgressDialog(getContext());
-
-        // Setting text selector over textviews
-        @SuppressLint("ResourceType") XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
+        @SuppressLint("ResourceType")
+        XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
         try {
-            ColorStateList csl = ColorStateList.createFromXml(getResources(),
-                    xrp);
-
+            ColorStateList csl = ColorStateList.createFromXml(getResources(), xrp);
             login.setTextColor(csl);
             terms_conditions.setTextColor(csl);
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
 
-    // Set Listeners
     private void setListeners() {
         signUpButton.setOnClickListener(this);
         login.setOnClickListener(this);
@@ -89,74 +74,66 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.signUpBtn:
-
-                // Call checkValidation method
-                checkValidation();
-                break;
-
-            case R.id.already_user:
-
-                // Replace login fragment
-                new LoginRegisterActivity().replaceLoginFragment();
-                break;
+            case R.id.signUpBtn: checkValidation(); break;
+            case R.id.already_user: new LoginRegisterActivity().replaceLoginFragment(); break;
         }
-
     }
 
-    // Check Validation Method
     private void checkValidation() {
-        // Get all edittext texts
-        String getFullName = fullName.getText().toString();
-        String getEmailId = emailId.getText().toString();
-        String getMobileNumber = mobileNumber.getText().toString();
+        String getFullName = fullName.getText().toString().trim();
+        String getEmailId = emailId.getText().toString().trim().toLowerCase();
+        String getMobileNumber = mobileNumber.getText().toString().trim();
         String getPassword = password.getText().toString();
-        // Pattern match for email id
         Pattern p = Pattern.compile(Utils.regEx);
         Matcher m = p.matcher(getEmailId);
 
-
         if (getFullName.length() == 0) {
-            fullName.setError("Eneter Your Name");
-            fullName.requestFocus();
-        } else if (getEmailId.length() == 0) {
-            emailId.setError("Eneter Your Email");
-            emailId.requestFocus();
-        } else if (!m.find()) {
-            emailId.setError("Eneter Correct Email");
-            emailId.requestFocus();
-        } else if (getMobileNumber.length() == 0) {
-            mobileNumber.setError("Eneter Your Mobile Number");
-            mobileNumber.requestFocus();
-        } else if (getPassword.length() == 0) {
-            password.setError("Eneter Password");
-            password.requestFocus();
-        } else if (getPassword.length() < 6) {
-            password.setError("Eneter 6 digit Password");
-            password.requestFocus();
-        } else if (!terms_conditions.isChecked()) {
-            new CustomToast().Show_Toast(getActivity(), view,
-                    "Accept Term & Conditions");
-        } else {
-            user = new User("1", getFullName, getEmailId, getMobileNumber, getPassword);
-            gson = new Gson();
-            String userString = gson.toJson(user);
-            localStorage = new LocalStorage(getContext());
-            localStorage.createUserLoginSession(userString);
-            progressDialog.setMessage("Registering Data....");
-            progressDialog.show();
-            Handler mHand = new Handler();
-            mHand.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    progressDialog.dismiss();
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    getActivity().finish();
-                    getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                }
-            }, 5000);
+            fullName.setError("Enter your name");
+            fullName.requestFocus(); return;
         }
-
+        if (getEmailId.length() == 0) {
+            emailId.setError("Enter your email");
+            emailId.requestFocus(); return;
+        }
+        if (!m.find()) {
+            emailId.setError("Enter a valid email");
+            emailId.requestFocus(); return;
+        }
+        if (!SecurityUtils.isEduEmail(getEmailId)) {
+            emailId.setError("Only .edu email addresses are allowed");
+            emailId.requestFocus(); return;
+        }
+        if (getMobileNumber.length() == 0) {
+            mobileNumber.setError("Enter your mobile number");
+            mobileNumber.requestFocus(); return;
+        }
+        if (!SecurityUtils.isStrongEnoughPassword(getPassword)) {
+            password.setError("Password must be at least 6 characters");
+            password.requestFocus(); return;
+        }
+        if (!terms_conditions.isChecked()) {
+            new CustomToast().Show_Toast(getActivity(), view, "Accept Terms & Conditions");
+            return;
+        }
+        String hashedPassword = SecurityUtils.sha256(getPassword);
+        user = new User();
+        user.setId("1");
+        user.setName(getFullName);
+        user.setEmail(getEmailId);
+        user.setMobile(getMobileNumber);
+        user.setPassword(hashedPassword);
+        user.setDiscountTier("student");
+        gson = new Gson();
+        String userString = gson.toJson(user);
+        localStorage = new LocalStorage(getContext());
+        localStorage.createUserLoginSession(userString);
+        progressDialog.setMessage("Registering Data....");
+        progressDialog.show();
+        new Handler().postDelayed(() -> {
+            progressDialog.dismiss();
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }, 1200);
     }
 }

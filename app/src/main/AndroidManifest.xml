@@ -12,37 +12,36 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="CampusHub"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.semo.cisproject.campushub.activity.WelcomeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:name=".activity.WelcomeActivity"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        android:label="CampusHub"
+        android:theme="@style/AppTheme.NoActionBar">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
-            android:name="com.semo.cisproject.campushub.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.semo.cisproject.campushub.activity.BaseActivity" />
+        <activity android:name=".activity.BaseActivity" />
         <activity
-            android:name="com.semo.cisproject.campushub.activity.ProductActivity"
+            android:name=".activity.ProductActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-            android:name="com.semo.cisproject.campushub.activity.LoginRegisterActivity"
+            android:name=".activity.LoginRegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name="com.semo.cisproject.campushub.activity.CartActivity" />
-        <activity android:name="com.semo.cisproject.campushub.activity.CheckoutActivity" />
-        <activity android:name="com.semo.cisproject.campushub.activity.ProductViewActivity"></activity>
+        <activity android:name=".activity.CartActivity" />
+        <activity android:name=".activity.CheckoutActivity" />
+        <activity android:name=".activity.ProductViewActivity" />
     </application>
-
 </manifest>

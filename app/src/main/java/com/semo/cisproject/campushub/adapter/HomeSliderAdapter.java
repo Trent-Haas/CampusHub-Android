@@ -6,21 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.semo.cisproject.campushub.R;
 
-
 public class HomeSliderAdapter extends PagerAdapter {
 
-    private Context context;
-    private LayoutInflater layoutInflater;
-    private Integer[] images;
-
-    public HomeSliderAdapter(Context context) {
-        this.context = context;
-    }
+    private final Context context;
+    private final Integer[] images;
 
     public HomeSliderAdapter(Context context, Integer[] images) {
         this.context = context;
@@ -29,35 +24,34 @@ public class HomeSliderAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return images.length;
+        return (images != null) ? images.length : 0;
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
 
+    @NonNull
     @Override
-    public Object instantiateItem(ViewGroup container, final int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.item_home_slider, null);
+        View view = layoutInflater.inflate(R.layout.item_home_slider, container, false);
+
         ImageView imageView = view.findViewById(R.id.imageView);
-        imageView.setImageResource(images[position]);
 
+        if (images != null && images.length > position) {
+            imageView.setImageResource(images[position]);
+        }
 
-        ViewPager vp = (ViewPager) container;
-        vp.addView(view, 0);
+        container.addView(view);
+
         return view;
-
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-
-        ViewPager vp = (ViewPager) container;
-        View view = (View) object;
-        vp.removeView(view);
-
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        container.removeView((View) object);
     }
 }

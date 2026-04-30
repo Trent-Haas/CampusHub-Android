@@ -24,226 +24,172 @@ import com.semo.cisproject.campushub.activity.ProductViewActivity;
 import com.semo.cisproject.campushub.interfaces.AddorRemoveCallbacks;
 import com.semo.cisproject.campushub.model.Cart;
 import com.semo.cisproject.campushub.model.Product;
+import com.semo.cisproject.campushub.util.LocalStorage;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
 
-    List<Product> productList;
-    Context context;
-    String Tag;
-    int pQuantity = 1;
-    LocalStorage localStorage;
-    Gson gson;
-    List<Cart> cartList = new ArrayList<>();
-    String _quantity, _price, _attribute, _subtotal;
+    private List<Product> productList;
+    private Context context;
+    private String tag;
+    private LocalStorage localStorage;
+    private Gson gson;
+    private List<Cart> cartList;
 
     public ProductAdapter(List<Product> productList, Context context) {
         this.productList = productList;
         this.context = context;
+        initUtils();
     }
 
     public ProductAdapter(List<Product> productList, Context context, String tag) {
         this.productList = productList;
         this.context = context;
-        Tag = tag;
+        this.tag = tag;
+        initUtils();
+    }
+
+    private void initUtils() {
+        this.localStorage = new LocalStorage(context);
+        this.gson = new Gson();
+        this.cartList = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
-        if (Tag.equalsIgnoreCase("List")) {
+        if (tag != null && tag.equalsIgnoreCase("List")) {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_products, parent, false);
         } else {
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_grid_products, parent, false);
         }
-
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
         final Product product = productList.get(position);
-        localStorage = new LocalStorage(context);
-        gson = new Gson();
         cartList = ((BaseActivity) context).getCartList();
+
         holder.title.setText(product.getTitle());
         holder.offer.setText(product.getDiscount());
         holder.attribute.setText(product.getAttribute());
-        holder.currency.setText(product.getCurrency());
+        holder.currency.setText("$");
         holder.price.setText(product.getPrice());
+
+        if (product.getDiscount() == null || product.getDiscount().isEmpty()) {
+            holder.offer.setVisibility(View.GONE);
+        } else {
+            holder.offer.setVisibility(View.VISIBLE);
+        }
+
         Picasso.get()
                 .load(product.getImage())
+                .placeholder(R.drawable.no_image)
+                .error(R.drawable.no_image)
                 .into(holder.imageView, new Callback() {
                     @Override
-                    public void onSuccess() {
-                        holder.progressBar.setVisibility(View.GONE);
-                    }
-
+                    public void onSuccess() { holder.progressBar.setVisibility(View.GONE); }
                     @Override
-                    public void onError(Exception e) {
-                        Log.d("Error : ", e.getMessage());
-                    }
+                    public void onError(Exception e) { holder.progressBar.setVisibility(View.GONE); }
                 });
 
+        updateCartUI(holder, product);
 
-        if (product.getDiscount() == null || product.getDiscount().length() == 0) {
-            holder.offer.setVisibility(View.GONE);
-        }
+        holder.plus.setOnClickListener(v -> updateQuantity(holder, product, 1, position));
+        holder.minus.setOnClickListener(v -> updateQuantity(holder, product, -1, position));
 
-        if (!cartList.isEmpty()) {
-            for (int i = 0; i < cartList.size(); i++) {
-                if (cartList.get(i).getId().equalsIgnoreCase(product.getId())) {
-                    holder.addToCart.setVisibility(View.GONE);
-                    holder.subTotal.setVisibility(View.VISIBLE);
-                    holder.quantity.setText(cartList.get(i).getQuantity());
-                    _quantity = cartList.get(i).getQuantity();
-                    _price = product.getPrice();
-                    _subtotal = String.valueOf(Double.parseDouble(_price) * Integer.parseInt(_quantity));
-                    holder.subTotal.setText(_quantity + "X" + _price + "= Rs." + _subtotal);
-                    Log.d("Tag : ", cartList.get(i).getId() + "-->" + product.getId());
+        holder.addToCart.setOnClickListener(v -> {
+            String qty = holder.quantity.getText().toString();
+            if (!qty.equals("0")) {
+                double price = Double.parseDouble(product.getPrice());
+                double subTotal = price * Integer.parseInt(qty);
+
+                Cart cartItem = new Cart(product.getId(), product.getTitle(), product.getImage(), "$",
+                        product.getPrice(), product.getAttribute(), qty, String.valueOf(subTotal));
+
+                cartList = ((BaseActivity) context).getCartList();
+                cartList.add(cartItem);
+                saveCart();
+
+                if (context instanceof AddorRemoveCallbacks) {
+                    ((AddorRemoveCallbacks) context).onAddProduct();
                 }
-            }
-        } else {
-
-            holder.quantity.setText("1");
-        }
-
-        holder.plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pQuantity = Integer.parseInt(holder.quantity.getText().toString());
-                if (pQuantity >= 1) {
-                    int total_item = Integer.parseInt(holder.quantity.getText().toString());
-                    total_item++;
-                    holder.quantity.setText(total_item + "");
-                    for (int i = 0; i < cartList.size(); i++) {
-
-                        if (cartList.get(i).getId().equalsIgnoreCase(product.getId())) {
-
-                            // Log.d("totalItem", total_item + "");
-
-                            _subtotal = String.valueOf(Double.parseDouble(holder.price.getText().toString()) * total_item);
-                            cartList.get(i).setQuantity(holder.quantity.getText().toString());
-                            cartList.get(i).setSubTotal(_subtotal);
-                            holder.subTotal.setText(total_item + "X" + holder.price.getText().toString() + "= Rs." + _subtotal);
-                            String cartStr = gson.toJson(cartList);
-                            //Log.d("CART", cartStr);
-                            localStorage.setCart(cartStr);
-                            notifyItemChanged(position);
-                        }
-                    }
-                }
-
-            }
-        });
-        holder.minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pQuantity = Integer.parseInt(holder.quantity.getText().toString());
-                if (pQuantity != 1) {
-                    int total_item = Integer.parseInt(holder.quantity.getText().toString());
-                    total_item--;
-                    holder.quantity.setText(total_item + "");
-                    for (int i = 0; i < cartList.size(); i++) {
-                        if (cartList.get(i).getId().equalsIgnoreCase(product.getId())) {
-
-                            //holder.quantity.setText(total_item + "");
-                            //Log.d("totalItem", total_item + "");
-                            _subtotal = String.valueOf(Double.parseDouble(holder.price.getText().toString()) * total_item);
-                            cartList.get(i).setQuantity(holder.quantity.getText().toString());
-                            cartList.get(i).setSubTotal(_subtotal);
-                            holder.subTotal.setText(total_item + "X" + holder.price.getText().toString() + "= Rs." + _subtotal);
-                            String cartStr = gson.toJson(cartList);
-                            //Log.d("CART", cartStr);
-                            localStorage.setCart(cartStr);
-                            notifyItemChanged(position);
-                        }
-                    }
-
-                }
-
+                notifyItemChanged(position);
+            } else {
+                Toast.makeText(context, "Please Add Quantity", Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Intent intent = new Intent(context, ProductActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);*/
-                Toast.makeText(context, "Product Clicked", Toast.LENGTH_LONG).show();
-            }
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductViewActivity.class);
+            intent.putExtra("id", product.getId());
+            intent.putExtra("title", product.getTitle());
+            intent.putExtra("image", product.getImage());
+            intent.putExtra("price", product.getPrice());
+            intent.putExtra("currency", "$");
+            intent.putExtra("attribute", product.getAttribute());
+            intent.putExtra("discount", product.getDiscount());
+            intent.putExtra("description", product.getDescription());
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent);
         });
+    }
 
-        holder.addToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+    private void updateCartUI(MyViewHolder holder, Product product) {
+        boolean found = false;
+        for (Cart item : cartList) {
+            if (item.getId().equalsIgnoreCase(product.getId())) {
                 holder.addToCart.setVisibility(View.GONE);
                 holder.subTotal.setVisibility(View.VISIBLE);
+                holder.quantity.setText(item.getQuantity());
+                double subTotal = Double.parseDouble(product.getPrice()) * Integer.parseInt(item.getQuantity());
+                holder.subTotal.setText(item.getQuantity() + " X " + product.getPrice() + " = $" + String.format("%.2f", subTotal));
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            holder.addToCart.setVisibility(View.VISIBLE);
+            holder.subTotal.setVisibility(View.GONE);
+            holder.quantity.setText("1");
+        }
+    }
 
+    private void updateQuantity(MyViewHolder holder, Product product, int delta, int position) {
+        int currentQty = Integer.parseInt(holder.quantity.getText().toString());
+        int newQty = currentQty + delta;
 
-                _price = product.getPrice();
-                _quantity = holder.quantity.getText().toString();
-                _attribute = product.getAttribute();
-
-                if (Integer.parseInt(_quantity) != 0) {
-                    _subtotal = String.valueOf(Double.parseDouble(_price) * Integer.parseInt(_quantity));
-                    holder.subTotal.setText(_quantity + "X" + _price + "= Rs." + _subtotal);
-                    if (context instanceof ProductActivity) {
-                        Cart cart = new Cart(product.getId(), product.getTitle(), product.getImage(), product.getCurrency(), _price, _attribute, _quantity, _subtotal);
-                        cartList = ((BaseActivity) context).getCartList();
-                        cartList.add(cart);
-                        String cartStr = gson.toJson(cartList);
-                        //Log.d("CART", cartStr);
-                        localStorage.setCart(cartStr);
-                        ((AddorRemoveCallbacks) context).onAddProduct();
-                        notifyItemChanged(position);
-                    }
-                } else {
-                    Toast.makeText(context, "Please Add Quantity", Toast.LENGTH_SHORT).show();
+        if (newQty >= 1) {
+            holder.quantity.setText(String.valueOf(newQty));
+            for (int i = 0; i < cartList.size(); i++) {
+                if (cartList.get(i).getId().equalsIgnoreCase(product.getId())) {
+                    double price = Double.parseDouble(product.getPrice());
+                    double subTotal = price * newQty;
+                    cartList.get(i).setQuantity(String.valueOf(newQty));
+                    cartList.get(i).setSubTotal(String.valueOf(subTotal));
+                    saveCart();
+                    notifyItemChanged(position);
+                    break;
                 }
-
-
             }
-        });
+        }
+    }
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ProductViewActivity.class);
-                intent.putExtra("id", product.getId());
-                intent.putExtra("title", product.getTitle());
-                intent.putExtra("image", product.getImage());
-                intent.putExtra("price", product.getPrice());
-                intent.putExtra("currency", product.getCurrency());
-                intent.putExtra("attribute", product.getAttribute());
-                intent.putExtra("discount", product.getDiscount());
-                intent.putExtra("description", product.getDescription());
-
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent);
-            }
-        });
-
+    private void saveCart() {
+        localStorage.setCart(gson.toJson(cartList));
     }
 
     @Override
     public int getItemCount() {
-
-        return productList.size();
+        return productList != null ? productList.size() : 0;
     }
 
     @Override
@@ -251,17 +197,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         return position;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title;
+        TextView title, offer, currency, price, quantity, attribute, addToCart, subTotal;
         ProgressBar progressBar;
         CardView cardView;
-        TextView offer, currency, price, quantity, attribute, addToCart, subTotal;
         Button plus, minus;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.product_image);
             title = itemView.findViewById(R.id.product_title);
             progressBar = itemView.findViewById(R.id.progressbar);

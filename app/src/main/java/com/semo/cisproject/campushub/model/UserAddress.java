@@ -1,15 +1,17 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class UserAddress {
-    String id;
-    String name;
-    String email;
-    String mobile;
-    String address;
-    String state;
-    String city;
-    String zip;
+    private String id;
+    private String name;
+    private String email;
+    private String mobile;
+    private String address;
+    private String state;
+    private String city;
+    private String zip;
+
+    public UserAddress() {
+    }
 
     public UserAddress(String name, String email, String mobile, String address, String state, String city, String zip) {
         this.name = name;

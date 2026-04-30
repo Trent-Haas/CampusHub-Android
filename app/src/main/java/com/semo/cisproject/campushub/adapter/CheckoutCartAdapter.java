@@ -11,67 +11,67 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.model.Cart;
+import com.semo.cisproject.campushub.util.LocalStorage;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-
 public class CheckoutCartAdapter extends RecyclerView.Adapter<CheckoutCartAdapter.MyViewHolder> {
 
-    List<Cart> cartList;
-    Context context;
-    int pQuantity = 1;
-    String _subtotal, _price, _quantity;
-    LocalStorage localStorage;
-    Gson gson;
-
+    private List<Cart> cartList;
+    private Context context;
+    private LocalStorage localStorage;
+    private Gson gson;
 
     public CheckoutCartAdapter(List<Cart> cartList, Context context) {
         this.cartList = cartList;
         this.context = context;
+        this.localStorage = new LocalStorage(context);
+        this.gson = new Gson();
     }
-
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View itemView;
-
-        itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_cart, parent, false);
-
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
         final Cart cart = cartList.get(position);
-        localStorage = new LocalStorage(context);
-        gson = new Gson();
+
         holder.title.setText(cart.getTitle());
         holder.attribute.setText(cart.getAttribute());
-        _price = cart.getPrice();
-        _quantity = cart.getQuantity();
-        holder.quantity.setText(_quantity);
-        holder.price.setText(_price);
-        holder.currency.setText(cart.getCurrency());
-        _subtotal = String.valueOf(Double.parseDouble(_price) * Integer.parseInt(_quantity));
+        holder.quantity.setText(cart.getQuantity());
+
+        holder.currency.setText("$");
+        holder.price.setText(cart.getPrice());
+
+        try {
+            double priceValue = Double.parseDouble(cart.getPrice());
+            int qtyValue = Integer.parseInt(cart.getQuantity());
+            double subTotalValue = priceValue * qtyValue;
+            holder.subTotal.setText(String.format("%.2f", subTotalValue));
+        } catch (Exception e) {
+            holder.subTotal.setText(cart.getSubTotal());
+            Log.e("CheckoutAdapter", "Error calculating subtotal", e);
+        }
+
         holder.plus.setVisibility(View.GONE);
         holder.minus.setVisibility(View.GONE);
         holder.delete.setVisibility(View.GONE);
-        holder.currency.setText(cart.getCurrency());
-        holder.subTotal.setText(_subtotal);
+
         Picasso.get()
                 .load(cart.getImage())
+                .placeholder(R.drawable.no_image)
                 .into(holder.imageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -80,107 +80,25 @@ public class CheckoutCartAdapter extends RecyclerView.Adapter<CheckoutCartAdapte
 
                     @Override
                     public void onError(Exception e) {
-                        Log.d("Error : ", e.getMessage());
+                        holder.progressBar.setVisibility(View.GONE);
+                        Log.e("Picasso", "Checkout item image failed: " + e.getMessage());
                     }
                 });
-
-        /* holder.plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                pQuantity = Integer.parseInt(holder.quantity.getText().toString());
-                if (pQuantity >= 1) {
-                    int total_item = Integer.parseInt(holder.quantity.getText().toString());
-                    total_item++;
-                    holder.quantity.setText(total_item + "");
-                    for (int i = 0; i < cartList.size(); i++) {
-
-                        if (cartList.get(i).getId().equalsIgnoreCase(cart.getId())) {
-
-                            // Log.d("totalItem", total_item + "");
-
-                            _subtotal = String.valueOf(Double.parseDouble(holder.price.getText().toString()) * total_item);
-                            cartList.get(i).setQuantity(holder.quantity.getText().toString());
-                            cartList.get(i).setSubTotal(_subtotal);
-                            holder.subTotal.setText(_subtotal);
-                            String cartStr = gson.toJson(cartList);
-                            //Log.d("CART", cartStr);
-                            localStorage.setCart(cartStr);
-                            ((CartActivity) context).updateTotalPrice();
-                        }
-                    }
-                }
-
-
-            }
-        });
-        holder.minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                pQuantity = Integer.parseInt(holder.quantity.getText().toString());
-                if (pQuantity != 1) {
-                    int total_item = Integer.parseInt(holder.quantity.getText().toString());
-                    total_item--;
-                    holder.quantity.setText(total_item + "");
-                    for (int i = 0; i < cartList.size(); i++) {
-                        if (cartList.get(i).getId().equalsIgnoreCase(cart.getId())) {
-
-                            //holder.quantity.setText(total_item + "");
-                            //Log.d("totalItem", total_item + "");
-                            _subtotal = String.valueOf(Double.parseDouble(holder.price.getText().toString()) * total_item);
-                            cartList.get(i).setQuantity(holder.quantity.getText().toString());
-                            cartList.get(i).setSubTotal(_subtotal);
-                            holder.subTotal.setText(_subtotal);
-                            String cartStr = gson.toJson(cartList);
-                            //Log.d("CART", cartStr);
-                            localStorage.setCart(cartStr);
-                            ((CartActivity) context).updateTotalPrice();
-
-                        }
-                    }
-
-                }
-            }
-        });
-
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                        cartList.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, cartList.size());
-                        Gson gson = new Gson();
-                        String cartStr = gson.toJson(cartList);
-                        Log.d("CART", cartStr);
-                        localStorage.setCart(cartStr);
-                        ((CartActivity) context).updateTotalPrice();
-
-
-            }
-        });*/
-
-
     }
 
     @Override
     public int getItemCount() {
-
         return cartList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title;
+        TextView title, currency, price, quantity, attribute, subTotal;
         ProgressBar progressBar;
-        CardView cardView;
-        TextView offer, currency, price, quantity, attribute, addToCart, subTotal;
         Button plus, minus, delete;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.product_image);
             title = itemView.findViewById(R.id.product_title);
             progressBar = itemView.findViewById(R.id.progressbar);

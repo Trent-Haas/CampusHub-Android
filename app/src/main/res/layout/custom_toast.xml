@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-*CampusHub
-   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toast_root"
-    android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_toast_layout_id"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark"
-    android:padding="5dp">
+    android:background="@drawable/card_highlight_gradient"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:elevation="8dp">
+
+    <ImageView
+        android:id="@+id/toast_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_success_circle"
+        android:tint="@color/white" />
 
     <TextView
-        android:id="@+id/toast_error"
+        android:id="@+id/toast_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/error"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:padding="5dp"
+        android:layout_gravity="center_vertical"
         android:textColor="@color/white"
-        android:textSize="15sp" />
-
-</RelativeLayout>
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</LinearLayout>

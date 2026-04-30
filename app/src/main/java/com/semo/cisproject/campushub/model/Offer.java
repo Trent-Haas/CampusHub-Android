@@ -1,12 +1,11 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class Offer {
-    String id;
-    String image;
-    String product_id;
-    String discount_percent;
-    String valid_until;
+    private String id;
+    private String image;
+    private String product_id;
+    private String discount_percent;
+    private String valid_until;
 
     public Offer() {
     }

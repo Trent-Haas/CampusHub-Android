@@ -1,12 +1,11 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class OrderItem {
-    String id;
-    String order_id;
-    String product_id;
-    int quantity;
-    String unit_price;
+    private String id;
+    private String order_id;
+    private String product_id;
+    private int quantity;
+    private String unit_price;
 
     public OrderItem() {
     }

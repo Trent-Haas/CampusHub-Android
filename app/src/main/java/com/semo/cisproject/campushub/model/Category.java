@@ -1,10 +1,9 @@
 package com.semo.cisproject.campushub.model;
 
-
 public class Category {
-    String id;
-    String title;
-    String image;
+    private String id;
+    private String title;
+    private String image;
 
     public Category() {
     }
@@ -38,5 +37,4 @@ public class Category {
     public void setImage(String image) {
         this.image = image;
     }
-
 }

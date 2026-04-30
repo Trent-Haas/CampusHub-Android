@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:dither="true"
-    android:shape="oval"
-    android:useLevel="true">
+    android:shape="oval">
 
     <size
-        android:width="8dip"
-        android:height="8dip" />
+        android:width="8dp"
+        android:height="8dp" />
 
     <gradient
         android:angle="180"
+        android:startColor="#C8102E"
         android:endColor="#FC5952"
-        android:startColor="#E8CA54"
         android:type="linear" />
 </shape>
