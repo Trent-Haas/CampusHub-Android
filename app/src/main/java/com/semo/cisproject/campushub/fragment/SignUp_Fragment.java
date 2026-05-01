@@ -138,7 +138,15 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
             new CustomToast().Show_Toast(getActivity(), view,
                     "Accept Term & Conditions");
         } else {
-            user = new User("1", getFullName, getEmailId, getMobileNumber, getPassword);
+            user = new User();
+            user.setId("1");
+            user.setName(getFullName);
+            user.setEmail(getEmailId);
+            user.setMobile(getMobileNumber);
+            user.setPasswordHash(getPassword);
+            user.setStudentVerified(0);
+            user.setDiscountTier("none");
+            user.setDiscountUsed(0);
             gson = new Gson();
             String userString = gson.toJson(user);
             localStorage = new LocalStorage(getContext());
