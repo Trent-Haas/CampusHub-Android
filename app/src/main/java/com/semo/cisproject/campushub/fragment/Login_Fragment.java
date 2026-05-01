@@ -141,7 +141,35 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         if (!m.find()) {
             new CustomToast().Show_Toast(getActivity(), view, "Your Email Id is Invalid.");
             vibrate(200);
-            return;
+        } else {
+
+            progressDialog.setMessage("Please Wait....");
+            progressDialog.show();
+
+            Handler mHand = new Handler();
+            mHand.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (user != null) {
+                        if (!user.getEmail().equalsIgnoreCase(getEmailId) || !user.getPasswordHash().equalsIgnoreCase(getPassword)) {
+                            new CustomToast().Show_Toast(getActivity(), view,
+                                    "Please Check Email or Password");
+                        } else {
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            getActivity().finish();
+                            getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        }
+                    } else {
+                        new CustomToast().Show_Toast(getActivity(), view,
+                                "Please Register whith This Email");
+                    }
+
+                    progressDialog.dismiss();
+
+                }
+            }, 5000);
+
         }
         progressDialog.setMessage("Please Wait....");
         progressDialog.show();

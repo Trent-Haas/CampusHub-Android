@@ -89,8 +89,53 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
         Matcher m = p.matcher(getEmailId);
 
         if (getFullName.length() == 0) {
-            fullName.setError("Enter your name");
-            fullName.requestFocus(); return;
+            fullName.setError("Eneter Your Name");
+            fullName.requestFocus();
+        } else if (getEmailId.length() == 0) {
+            emailId.setError("Eneter Your Email");
+            emailId.requestFocus();
+        } else if (!m.find()) {
+            emailId.setError("Eneter Correct Email");
+            emailId.requestFocus();
+        } else if (getMobileNumber.length() == 0) {
+            mobileNumber.setError("Eneter Your Mobile Number");
+            mobileNumber.requestFocus();
+        } else if (getPassword.length() == 0) {
+            password.setError("Eneter Password");
+            password.requestFocus();
+        } else if (getPassword.length() < 6) {
+            password.setError("Eneter 6 digit Password");
+            password.requestFocus();
+        } else if (!terms_conditions.isChecked()) {
+            new CustomToast().Show_Toast(getActivity(), view,
+                    "Accept Term & Conditions");
+        } else {
+            user = new User();
+            user.setId("1");
+            user.setName(getFullName);
+            user.setEmail(getEmailId);
+            user.setMobile(getMobileNumber);
+            user.setPasswordHash(getPassword);
+            user.setStudentVerified(0);
+            user.setDiscountTier("none");
+            user.setDiscountUsed(0);
+            gson = new Gson();
+            String userString = gson.toJson(user);
+            localStorage = new LocalStorage(getContext());
+            localStorage.createUserLoginSession(userString);
+            progressDialog.setMessage("Registering Data....");
+            progressDialog.show();
+            Handler mHand = new Handler();
+            mHand.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                    getActivity().finish();
+                    getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                }
+            }, 5000);
         }
         if (getEmailId.length() == 0) {
             emailId.setError("Enter your email");
