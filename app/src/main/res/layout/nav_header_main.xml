@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
-    android:background="@color/colorPrimary"
+    android:layout_height="180dp"
+    android:padding="20dp"
     android:gravity="bottom"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:paddingTop="8dp"
-        android:src="@drawable/logo" />
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/logo"
+        android:scaleType="centerInside" />
 
     <TextView
+        android:id="@+id/profile_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:text="CampusHub"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:textSize="20sp" />
+        android:textSize="18sp"
+        android:text="User Name" />
 
     <TextView
         android:id="@+id/user_email_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="tmoore@semo.edu" />
+        android:text="tmoore@semo.edu"
+        android:textColor="@android:color/white"
+        android:alpha="0.8"
+        android:textSize="14sp" />
 
 </LinearLayout>

@@ -32,12 +32,14 @@ public class NewProductFragment extends Fragment {
         data = new Data();
         nRecyclerView = view.findViewById(R.id.new_product_rv);
 
-        pAdapter = new NewProductAdapter(data.getNewList(), getContext(), "new");
+        if (nRecyclerView != null) {
+            pAdapter = new NewProductAdapter(data.getNewList(), getContext(), "new");
 
-        RecyclerView.LayoutManager pLayoutManager = new LinearLayoutManager(getContext());
-        nRecyclerView.setLayoutManager(pLayoutManager);
-        nRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        nRecyclerView.setAdapter(pAdapter);
+            RecyclerView.LayoutManager pLayoutManager = new LinearLayoutManager(getContext());
+            nRecyclerView.setLayoutManager(pLayoutManager);
+            nRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            nRecyclerView.setAdapter(pAdapter);
+        }
 
         return view;
     }

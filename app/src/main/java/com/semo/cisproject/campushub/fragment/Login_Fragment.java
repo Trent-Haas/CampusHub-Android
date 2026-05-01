@@ -12,7 +12,6 @@ import android.os.Vibrator;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,19 +20,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
 import com.google.gson.Gson;
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.activity.MainActivity;
 import com.semo.cisproject.campushub.model.User;
 import com.semo.cisproject.campushub.util.CustomToast;
+import com.semo.cisproject.campushub.util.LocalStorage;
 import com.semo.cisproject.campushub.util.SecurityUtils;
 import com.semo.cisproject.campushub.util.Utils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +44,6 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     private static Button loginButton;
     private static TextView forgotPassword, signUp;
     private static CheckBox show_hide_password;
-    private static LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
@@ -68,9 +68,10 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         forgotPassword = view.findViewById(R.id.forgot_password);
         signUp = view.findViewById(R.id.createAccount);
         show_hide_password = view.findViewById(R.id.show_hide_password);
-        loginLayout = view.findViewById(R.id.login_layout);
+
         progressDialog = new ProgressDialog(getContext());
         localStorage = new LocalStorage(getContext());
+
         String userString = localStorage.getUserLogin();
         Gson gson = new Gson();
         try {
@@ -78,7 +79,9 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         } catch (Exception e) {
             user = null;
         }
+
         shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+
         @SuppressLint("ResourceType")
         XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
         try {
@@ -130,7 +133,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         Matcher m = p.matcher(getEmailId);
 
         if (getEmailId.length() == 0 || getPassword.length() == 0) {
-            loginLayout.startAnimation(shakeAnimation);
+            loginButton.startAnimation(shakeAnimation);
             new CustomToast().Show_Toast(getActivity(), view, "Enter both credentials.");
             vibrate(200);
             return;

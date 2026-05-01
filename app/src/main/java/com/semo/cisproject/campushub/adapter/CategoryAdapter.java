@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.activity.ProductActivity;
-import com.semo.cisproject.campushub.model.Category;
+import com.semo.cisproject.campushub.model.Product;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -24,16 +24,16 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
-    private List<Category> categoryList;
+    private List<Product> categoryList;
     private Context context;
     private String tag;
 
-    public CategoryAdapter(List<Category> categoryList, Context context) {
+    public CategoryAdapter(List<Product> categoryList, Context context) {
         this.categoryList = categoryList;
         this.context = context;
     }
 
-    public CategoryAdapter(List<Category> categoryList, Context context, String tag) {
+    public CategoryAdapter(List<Product> categoryList, Context context, String tag) {
         this.categoryList = categoryList;
         this.context = context;
         this.tag = tag;
@@ -55,13 +55,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
-        final Category category = categoryList.get(position);
+        final Product product = categoryList.get(position);
 
-        holder.title.setText(category.getTitle());
+        holder.title.setText(product.getTitle());
 
-        if (category.getImage() != null && !category.getImage().isEmpty()) {
+        if (product.getImage() != null && !product.getImage().isEmpty()) {
             Picasso.get()
-                    .load(category.getImage())
+                    .load(product.getImage())
                     .placeholder(R.drawable.no_image)
                     .into(holder.imageView, new Callback() {
                         @Override
@@ -72,17 +72,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
                         @Override
                         public void onError(Exception e) {
                             holder.progressBar.setVisibility(View.GONE);
-                            Log.e("Picasso", "Category image failed: " + e.getMessage());
                         }
                     });
+        } else if (product.getImageRes() != 0) {
+            holder.imageView.setImageResource(product.getImageRes());
+            holder.progressBar.setVisibility(View.GONE);
         } else {
+            holder.imageView.setImageResource(R.drawable.no_image);
             holder.progressBar.setVisibility(View.GONE);
         }
 
         View.OnClickListener clickListener = v -> {
             Intent intent = new Intent(context, ProductActivity.class);
-            intent.putExtra("category_id", category.getId());
-            intent.putExtra("category_title", category.getTitle());
+            intent.putExtra("category_id", product.getId());
+            intent.putExtra("category_title", product.getTitle());
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
         };

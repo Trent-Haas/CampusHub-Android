@@ -16,7 +16,9 @@
     <string name="already_user_prompt">Already have an account? Login</string>
     <string name="show_pwd">Show</string>
     <string name="terms_conditions">I agree to the Terms and Conditions</string>
-
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="hide_pwd">Hide</string>
     <string name="title_payment">Payment Method</string>
     <string name="title_popular">Popular Items</string>
 

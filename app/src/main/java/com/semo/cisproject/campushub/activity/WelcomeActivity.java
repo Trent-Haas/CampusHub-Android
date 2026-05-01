@@ -3,30 +3,13 @@ package com.semo.cisproject.campushub.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 
 import com.semo.cisproject.campushub.R;
-import com.semo.cisproject.campushub.adapter.ViewPagerAdapter;
 import com.semo.cisproject.campushub.util.LocalStorage;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class WelcomeActivity extends BaseActivity {
-
-    private ViewPager viewPager;
-    private LinearLayout sliderDotspanel;
-    private Timer timer;
-    private int page_position = 0;
-    private int dotscount;
-    private ImageView[] dots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,96 +19,20 @@ public class WelcomeActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        localStorage = new LocalStorage(getApplicationContext());
-        if (localStorage.isUserLoggedIn()) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-            return;
-        }
-
         setContentView(R.layout.activity_welcome);
+        localStorage = new LocalStorage(getApplicationContext());
 
-        setupOnboardingSlider();
+        new Handler().postDelayed(() -> {
 
-        enableCampusHubPermissions();
-    }
-
-    private void setupOnboardingSlider() {
-        viewPager = findViewById(R.id.viewPager);
-        sliderDotspanel = findViewById(R.id.SliderDots);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager.setAdapter(viewPagerAdapter);
-
-        dotscount = viewPagerAdapter.getCount();
-        dots = new ImageView[dotscount];
-
-        for (int i = 0; i < dotscount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.non_active_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(8, 0, 8, 0);
-            sliderDotspanel.addView(dots[i], params);
-        }
-
-        if (dotscount > 0) {
-            dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.active_dot));
-        }
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-            @Override
-            public void onPageSelected(int position) {
-                for (int i = 0; i < dotscount; i++) {
-                    dots[i].setImageDrawable(ContextCompat.getDrawable(WelcomeActivity.this, R.drawable.non_active_dot));
-                }
-                dots[position].setImageDrawable(ContextCompat.getDrawable(WelcomeActivity.this, R.drawable.active_dot));
-                page_position = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {}
-        });
-
-        scheduleSlider();
-    }
-
-    public void scheduleSlider() {
-        final Handler handler = new Handler();
-        final Runnable update = () -> {
-            if (page_position >= dotscount - 1) {
-                page_position = 0;
+            if (localStorage.isUserLoggedIn()) {
+                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
             } else {
-                page_position++;
+                startActivity(new Intent(WelcomeActivity.this, LoginRegisterActivity.class));
             }
-            viewPager.setCurrentItem(page_position, true);
-        };
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(update);
-            }
-        }, 500, 4000);
-    }
+            finish();
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 
-    @Override
-    protected void onStop() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        super.onStop();
-    }
-
-    public void onLetsClicked(View view) {
-        startActivity(new Intent(this, LoginRegisterActivity.class));
-        finish();
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        }, 2500);
     }
 }

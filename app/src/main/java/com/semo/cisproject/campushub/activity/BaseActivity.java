@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.semo.cisproject.campushub.interfaces.AddorRemoveCallbacks;
 import com.semo.cisproject.campushub.model.Cart;
 import com.semo.cisproject.campushub.model.Order;
+import com.semo.cisproject.campushub.model.Product;
 import com.semo.cisproject.campushub.util.LocalStorage;
 
 import java.lang.reflect.Type;
@@ -62,8 +63,13 @@ public class BaseActivity extends AppCompatActivity implements AddorRemoveCallba
         return cartList;
     }
 
-    public Double getTotalPrice() {
+    public double getTotalPrice() {
+
         updateLocalCartData();
+        if (cartList == null) {
+            return 0.0;
+        }
+
         double total = 0.0;
         for (Cart item : cartList) {
             try {
@@ -75,6 +81,9 @@ public class BaseActivity extends AppCompatActivity implements AddorRemoveCallba
         return total;
     }
 
+    public List<Order> getOrderList() {
+        return new ArrayList<>();
+    }
 
     public void showProgress(String message) {
         progressDialog.setMessage(message);

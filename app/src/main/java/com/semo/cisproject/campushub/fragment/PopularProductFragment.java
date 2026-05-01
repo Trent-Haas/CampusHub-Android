@@ -32,12 +32,14 @@ public class PopularProductFragment extends Fragment {
         data = new Data();
         pRecyclerView = view.findViewById(R.id.popular_product_rv);
 
-        pAdapter = new PopularProductAdapter(data.getPopularList(), getContext(), "pop");
+        if (pRecyclerView != null) {
+            pAdapter = new PopularProductAdapter(data.getPopularList(), getContext(), "pop");
 
-        RecyclerView.LayoutManager pLayoutManager = new LinearLayoutManager(getContext());
-        pRecyclerView.setLayoutManager(pLayoutManager);
-        pRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        pRecyclerView.setAdapter(pAdapter);
+            RecyclerView.LayoutManager pLayoutManager = new LinearLayoutManager(getContext());
+            pRecyclerView.setLayoutManager(pLayoutManager);
+            pRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            pRecyclerView.setAdapter(pAdapter);
+        }
 
         return view;
     }

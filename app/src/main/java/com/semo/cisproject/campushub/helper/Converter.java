@@ -18,11 +18,11 @@ public class Converter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.badge_icon_layout, null);
 
-        ImageView iconBadge = view.findViewById(R.id.icon_badge);
-        iconBadge.setImageResource(drawableId);
+        //ImageView iconBadge = view.findViewById(R.id.icon_badge);
+       //iconBadge.setImageResource(drawableId);
 
         if (count == 0) {
-            view.findViewById(R.id.counterValuePanel).setVisibility(View.GONE);
+            //view.findViewById(R.id.counterValuePanel).setVisibility(View.GONE);
         } else {
             TextView textView = view.findViewById(R.id.count);
             textView.setText(String.valueOf(count));

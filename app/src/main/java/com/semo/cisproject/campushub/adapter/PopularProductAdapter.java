@@ -115,6 +115,12 @@ public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAd
 
     private void updateQuantityUI(MyViewHolder holder, String productId) {
         boolean isInCart = false;
+
+        if (cartList == null) {
+            holder.quantity.setText("0");
+            return;
+        }
+
         for (Cart item : cartList) {
             if (item.getId().equalsIgnoreCase(productId)) {
                 holder.shopNow.setVisibility(View.GONE);

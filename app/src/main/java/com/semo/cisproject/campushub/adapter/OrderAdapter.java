@@ -36,9 +36,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         final Order order = orderList.get(position);
         holder.orderId.setText(order.getOrderId());
-        holder.date.setText(order.getDate());
-        holder.total.setText(String.format("$%s", order.getTotal()));
-        holder.status.setText(order.getStatus());
+        //holder.date.setText(order.getDate());
+        //holder.total.setText(String.format("$%s", order.getTotal()));
+        //holder.status.setText(order.getStatus());
     }
 
     @Override
@@ -52,9 +52,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewHolder
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             orderId = itemView.findViewById(R.id.order_id);
-            date = itemView.findViewById(R.id.date);
-            total = itemView.findViewById(R.id.total_amount);
-            status = itemView.findViewById(R.id.status);
+            //date = itemView.findViewById(R.id.date);
+            //total = itemView.findViewById(R.id.total_amount);
+            //status = itemView.findViewById(R.id.status);
         }
     }
 }

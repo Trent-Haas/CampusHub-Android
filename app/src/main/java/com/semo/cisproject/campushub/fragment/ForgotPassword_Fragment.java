@@ -42,8 +42,8 @@ public class ForgotPassword_Fragment extends Fragment implements OnClickListener
 
     private void initViews() {
         emailId = view.findViewById(R.id.registered_emailid);
-        submit = view.findViewById(R.id.forgot_button);
-        back = view.findViewById(R.id.backToLoginBtn);
+        //submit = view.findViewById(R.id.forgot_button);
+        //back = view.findViewById(R.id.backToLoginBtn);
 
         @SuppressLint("ResourceType")
         XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
@@ -56,20 +56,20 @@ public class ForgotPassword_Fragment extends Fragment implements OnClickListener
     }
 
     private void setListeners() {
-        back.setOnClickListener(this);
-        submit.setOnClickListener(this);
+        //back.setOnClickListener(this);
+        //submit.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
+        /*int id = v.getId();
         if (id == R.id.backToLoginBtn) {
             if (getActivity() instanceof LoginRegisterActivity) {
                 ((LoginRegisterActivity) getActivity()).replaceLoginFragment();
             }
         } else if (id == R.id.forgot_button) {
             submitButtonTask();
-        }
+        }*/
     }
 
     private void submitButtonTask() {

@@ -1,19 +1,22 @@
 package com.semo.cisproject.campushub.model;
 
-public class Product {
-    private String id;
-    private String categoryId;
-    private String department;
-    private String title;
-    private String description;
-    private String attribute;
-    private String currency;
-    private String price;
-    private String discount;
+import java.io.Serializable;
+
+public class Product implements Serializable {
+    private String id, categoryId, department, title, description, attribute, currency, price, discount;
     private int stock;
+    private int imageRes;
     private String image;
 
     public Product() {
+
+    }
+
+    public Product(String title, String price, int imageRes, String description) {
+        this.title = title;
+        this.price = price;
+        this.imageRes = imageRes;
+        this.description = description;
     }
 
     public Product(String id, String categoryId, String department, String title, String description,
@@ -35,88 +38,62 @@ public class Product {
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAttribute() {
-        return attribute;
-    }
-
-    public void setAttribute(String attribute) {
-        this.attribute = attribute;
     }
 
     public String getPrice() {
         return price;
     }
-
     public void setPrice(String price) {
         this.price = price;
     }
 
-    public String getDiscount() {
-        return discount;
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
+    public int getImageRes() {
+        return imageRes;
     }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
+    public void setImageRes(int imageRes) {
+        this.imageRes = imageRes;
     }
 
     public String getImage() {
         return image;
     }
-
     public void setImage(String image) {
         this.image = image;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public String getAttribute() {
+        return attribute;
+    }
+    public String getDiscount() {
+        return discount;
+    }
     public String getCurrency() {
         return currency;
     }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public int getStock() {
+        return stock;
     }
+
 }

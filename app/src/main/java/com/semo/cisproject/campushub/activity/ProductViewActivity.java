@@ -1,5 +1,6 @@
 package com.semo.cisproject.campushub.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -55,17 +56,18 @@ public class ProductViewActivity extends BaseActivity {
         checkCartStatus();
     }
 
+    @SuppressLint("WrongViewCast")
     private void initializeViews() {
-        title = findViewById(R.id.apv_title);
-        description = findViewById(R.id.apv_description);
-        price = findViewById(R.id.apv_price);
-        attribute = findViewById(R.id.apv_attribute);
-        discount = findViewById(R.id.apv_discount);
-        imageView = findViewById(R.id.apv_image);
+        title = findViewById(R.id.detailed_name);
+        description = findViewById(R.id.detailed_description);
+        price = findViewById(R.id.detailed_price);
+        //attribute = findViewById(R.id.apv_attribute);
+        //discount = findViewById(R.id.apv_discount);
+        imageView = findViewById(R.id.detailed_image);
         progressBar = findViewById(R.id.progressbar);
-        addToCartLayout = findViewById(R.id.add_to_cart_ll);
-        shareLayout = findViewById(R.id.apv_share);
-        quantityLayout = findViewById(R.id.quantity_rl);
+        addToCartLayout = findViewById(R.id.add_to_cart_btn);
+        //shareLayout = findViewById(R.id.apv_share);
+        //quantityLayout = findViewById(R.id.quantity_rl);
         quantity = findViewById(R.id.quantity);
 
         // Click Listeners

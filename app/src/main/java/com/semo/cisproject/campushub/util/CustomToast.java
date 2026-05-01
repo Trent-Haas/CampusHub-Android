@@ -24,22 +24,17 @@ public class CustomToast {
      */
     public void Show_Toast(@NonNull Context context, @NonNull View view, String message) {
 
-        // Layout Inflater for inflating custom view
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // Inflate the layout over view
-        // Note: Using the root layout ID from your custom_toast.xml
         View layout = inflater.inflate(R.layout.custom_toast,
-                view.findViewById(R.id.toast_root));
+                view.findViewById(R.id.toast_message));
 
-        // Get TextView ID and set the message
-        TextView text = layout.findViewById(R.id.toast_error);
+        TextView text = layout.findViewById(R.id.toast_message);
         text.setText(message);
 
         Toast toast = new Toast(context);
 
-        // Set Toast gravity to top and fill horizontal to match the app's notification style
         toast.setGravity(Gravity.TOP | Gravity.FILL_HORIZONTAL, 0, 0);
 
         toast.setDuration(Toast.LENGTH_SHORT);

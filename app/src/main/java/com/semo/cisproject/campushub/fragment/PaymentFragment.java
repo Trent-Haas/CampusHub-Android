@@ -4,10 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,10 +18,6 @@ import java.util.Locale;
 
 public class PaymentFragment extends Fragment {
 
-    private RadioGroup paymentGroup;
-    private FrameLayout cardFrame;
-    private RadioButton card, cash;
-    private LinearLayout payll;
     private TextView pay;
 
     public PaymentFragment() {
@@ -39,27 +31,28 @@ public class PaymentFragment extends Fragment {
 
         if (getActivity() instanceof BaseActivity) {
             double amount = ((BaseActivity) getActivity()).getTotalPrice();
-            pay.setText(String.format(Locale.US, "Total to Pay: $%.2f", amount));
+            if (pay != null) {
+                pay.setText(String.format(Locale.US, "Total to Pay: $%.2f", amount));
+            }
         }
 
-        payll.setOnClickListener(v -> navigateToConfirm());
-
-        paymentGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.cash_on_delivery) {
-                navigateToConfirm();
-            }
-        });
+        View checkoutBtn = view.findViewById(R.id.checkout_btn);
+        if (checkoutBtn != null) {
+            checkoutBtn.setOnClickListener(v -> navigateToConfirm());
+        }
 
         return view;
     }
 
     private void initViews(View view) {
-        paymentGroup = view.findViewById(R.id.payment_group);
-        card = view.findViewById(R.id.card_payment);
-        cash = view.findViewById(R.id.cash_on_delivery);
-        cardFrame = view.findViewById(R.id.card_frame);
-        payll = view.findViewById(R.id.pay_ll);
-        pay = view.findViewById(R.id.total_pay);
+        pay = view.findViewById(R.id.total_cart_price);
+
+
+        // paymentGroup = view.findViewById(R.id.payment_group);
+        // card = view.findViewById(R.id.card_payment);
+        // cash = view.findViewById(R.id.cash_on_delivery);
+        // cardFrame = view.findViewById(R.id.card_frame);
+        // payll = view.findViewById(R.id.pay_ll);
     }
 
     private void navigateToConfirm() {

@@ -32,9 +32,9 @@ import com.semo.cisproject.campushub.fragment.NewProductFragment;
 import com.semo.cisproject.campushub.fragment.OffrersFragment;
 import com.semo.cisproject.campushub.fragment.PopularProductFragment;
 import com.semo.cisproject.campushub.fragment.ProfileFragment;
-import com.semo.cisproject.campushub.fragment.AdminDashboardFragment;
 import com.semo.cisproject.campushub.helper.Converter;
 import com.semo.cisproject.campushub.model.User;
+import com.semo.cisproject.campushub.util.CustomToast;
 
 import java.util.ArrayList;
 
@@ -51,12 +51,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         centerToolbarTitle(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.colorPrimary));
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -74,12 +77,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void setupNavHeader(NavigationView navigationView) {
         View headerView = navigationView.getHeaderView(0);
-        TextView navUser = headerView.findViewById(R.id.nav_header_name);
+        if (headerView == null) return;
+
+        TextView navUser = headerView.findViewById(R.id.profile_name);
 
         String userString = localStorage.getUserLogin();
         currentUser = gson.fromJson(userString, User.class);
 
-        if (currentUser != null) {
+        if (currentUser != null && navUser != null) {
             navUser.setText(currentUser.getName());
             try {
                 Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Merienda-Bold.ttf");
@@ -88,14 +93,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
         LinearLayout navFooter = findViewById(R.id.footer_text);
-        navFooter.setOnClickListener(view -> {
-            localStorage.logoutUser();
-            Intent intent = new Intent(this, LoginRegisterActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-        });
+        if (navFooter != null) {
+            navFooter.setOnClickListener(view -> {
+                localStorage.logoutUser();
+                Intent intent = new Intent(this, LoginRegisterActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+            });
+        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -144,9 +151,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.nav_my_order:
                 fragment = new MyOrderFragment();
                 break;
-            case R.id.nav_admin_dashboard: // Hook for Data Scientist
-                fragment = new AdminDashboardFragment();
-                break;
+            // case R.id.nav_admin_dashboard:
+            //     fragment = new AdminDashboardFragment();
+            //     break;
             case R.id.nav_my_cart:
                 startActivity(new Intent(this, CartActivity.class));
                 overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
@@ -178,9 +185,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
         if (item.getItemId() == R.id.cart_action) {
             startActivity(new Intent(this, CartActivity.class));
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+            return true;
+        }
+        else if (id == R.id.action_settings) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, new ProfileFragment())
+                    .commit();
             return true;
         }
         return super.onOptionsItemSelected(item);

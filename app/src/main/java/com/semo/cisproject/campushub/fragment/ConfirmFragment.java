@@ -2,7 +2,6 @@ package com.semo.cisproject.campushub.fragment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.activity.BaseActivity;
-import com.semo.cisproject.campushub.activity.CartActivity;
 import com.semo.cisproject.campushub.activity.MainActivity;
 import com.semo.cisproject.campushub.adapter.CheckoutCartAdapter;
 import com.semo.cisproject.campushub.model.Cart;
@@ -45,7 +43,7 @@ public class ConfirmFragment extends Fragment {
     private TextView total, shipping, totalAmount;
     private double totalPriceValue, shippingValue, finalAmountValue;
     private ProgressDialog progressDialog;
-    private List<Order> orderList = new ArrayList<>();
+    private List<Order> orderList = new ArrayList<Order>();
     private String orderNo;
     private String id;
 
@@ -72,14 +70,16 @@ public class ConfirmFragment extends Fragment {
         calculatePricing();
         setUpCartRecyclerview();
 
+        /*
         view.findViewById(R.id.back).setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), CartActivity.class));
             if (getActivity() != null) {
                 getActivity().overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }
         });
+        */
 
-        view.findViewById(R.id.place_order).setOnClickListener(v -> {
+        view.findViewById(R.id.checkout_btn).setOnClickListener(v -> {
             progressDialog.setMessage("Processing Order...");
             progressDialog.show();
             processOrderPlacement();
@@ -89,10 +89,12 @@ public class ConfirmFragment extends Fragment {
     }
 
     private void initViews(View v) {
-        recyclerView = v.findViewById(R.id.cart_rv);
-        totalAmount = v.findViewById(R.id.total_amount);
-        total = v.findViewById(R.id.total);
-        shipping = v.findViewById(R.id.shipping_amount);
+        recyclerView = v.findViewById(R.id.cart_recycler_view);
+        totalAmount = v.findViewById(R.id.total_cart_price);
+
+        // total = v.findViewById(R.id.total);
+        // shipping = v.findViewById(R.id.shipping_amount);
+
         progressDialog = new ProgressDialog(getContext());
     }
 
@@ -100,8 +102,9 @@ public class ConfirmFragment extends Fragment {
         shippingValue = 0.0;
         finalAmountValue = totalPriceValue + shippingValue;
 
-        total.setText(String.format(Locale.US, "$%.2f", totalPriceValue));
-        shipping.setText(String.format(Locale.US, "$%.2f", shippingValue));
+        // total.setText(String.format(Locale.US, "$%.2f", totalPriceValue));
+        // shipping.setText(String.format(Locale.US, "$%.2f", shippingValue));
+
         totalAmount.setText(String.format(Locale.US, "$%.2f", finalAmountValue));
     }
 

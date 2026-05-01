@@ -44,9 +44,9 @@ public class CartActivity extends BaseActivity {
 
         setupToolbar();
 
-        emptyCart = findViewById(R.id.empty_cart_img);
-        checkoutLL = findViewById(R.id.checkout_LL);
-        totalPrice = findViewById(R.id.total_price);
+        emptyCart = findViewById(R.id.cart_product_image);
+        checkoutLL = findViewById(R.id.cart_bottom_bar);
+        totalPrice = findViewById(R.id.total_cart_price);
 
         refreshTotalPriceUI();
 
@@ -87,13 +87,17 @@ public class CartActivity extends BaseActivity {
     private void setUpCartRecyclerview() {
         cartList = getCartList();
 
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+        }
+
         if (cartList.isEmpty()) {
             toggleEmptyState(true);
         } else {
             toggleEmptyState(false);
         }
 
-        recyclerView = findViewById(R.id.cart_rv);
+        recyclerView = findViewById(R.id.cart_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
