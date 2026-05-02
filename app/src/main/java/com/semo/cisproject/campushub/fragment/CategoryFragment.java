@@ -22,8 +22,7 @@ public class CategoryFragment extends Fragment {
     private CategoryAdapter mAdapter;
     private Data data;
 
-    public CategoryFragment() {
-    }
+    public CategoryFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

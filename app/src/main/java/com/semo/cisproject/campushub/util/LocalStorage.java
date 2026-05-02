@@ -26,29 +26,39 @@ public class LocalStorage {
     public String getCart() {
         return sharedPreferences.getString("cart", "");
     }
+
     public void setCart(String cart) {
         sharedPreferences.edit().putString("cart", cart).apply();
     }
+
     public void deleteCart() {
         sharedPreferences.edit().remove("cart").apply();
     }
+
     public boolean isUserLoggedIn() {
         return sharedPreferences.getBoolean("isLoggedIn", false);
     }
+
     public void logoutUser() {
-        sharedPreferences.edit().clear().apply();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", false);
+        editor.remove("cart");
+        editor.apply();
     }
+
     public String getUserLogin() {
         return sharedPreferences.getString("userLogin", "");
     }
+
     public String getUserAddress() {
         return sharedPreferences.getString("userAddress", "");
     }
+
     public void setUserAddress(String address) {
         sharedPreferences.edit().putString("userAddress", address).apply();
     }
+
     public void setOrder(String order) {
         sharedPreferences.edit().putString("order", order).apply();
     }
-
 }

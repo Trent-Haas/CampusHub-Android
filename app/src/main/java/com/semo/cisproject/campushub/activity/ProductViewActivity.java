@@ -1,6 +1,5 @@
 package com.semo.cisproject.campushub.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -12,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,8 +29,8 @@ public class ProductViewActivity extends BaseActivity {
     private TextView title, description, price, attribute, discount, quantity;
     private ImageView imageView;
     private ProgressBar progressBar;
-    private LinearLayout addToCartLayout, shareLayout;
-    private RelativeLayout quantityLayout;
+    private View addToCartBtn, shareBtn;
+    private View quantityLayout;
     private int cartIndex = -1;
 
     @Override
@@ -56,25 +54,31 @@ public class ProductViewActivity extends BaseActivity {
         checkCartStatus();
     }
 
-    @SuppressLint("WrongViewCast")
     private void initializeViews() {
         title = findViewById(R.id.detailed_name);
         description = findViewById(R.id.detailed_description);
         price = findViewById(R.id.detailed_price);
-        //attribute = findViewById(R.id.apv_attribute);
-        //discount = findViewById(R.id.apv_discount);
+        attribute = findViewById(R.id.apv_attribute);
+        discount = findViewById(R.id.apv_discount);
         imageView = findViewById(R.id.detailed_image);
         progressBar = findViewById(R.id.progressbar);
-        addToCartLayout = findViewById(R.id.add_to_cart_btn);
-        //shareLayout = findViewById(R.id.apv_share);
-        //quantityLayout = findViewById(R.id.quantity_rl);
+        addToCartBtn = findViewById(R.id.add_to_cart_btn);
+        shareBtn = findViewById(R.id.apv_share);
+        quantityLayout = findViewById(R.id.quantity_rl);
         quantity = findViewById(R.id.quantity);
 
-        // Click Listeners
-        shareLayout.setOnClickListener(v -> shareProduct());
-        addToCartLayout.setOnClickListener(v -> addNewItemToCart());
-        findViewById(R.id.quantity_plus).setOnClickListener(v -> updateQuantity(1));
-        findViewById(R.id.quantity_minus).setOnClickListener(v -> updateQuantity(-1));
+        if (shareBtn != null) {
+            shareBtn.setOnClickListener(v -> shareProduct());
+        }
+        if (addToCartBtn != null) {
+            addToCartBtn.setOnClickListener(v -> addNewItemToCart());
+        }
+
+        View plusBtn = findViewById(R.id.quantity_plus);
+        View minusBtn = findViewById(R.id.quantity_minus);
+
+        if (plusBtn != null) plusBtn.setOnClickListener(v -> updateQuantity(1));
+        if (minusBtn != null) minusBtn.setOnClickListener(v -> updateQuantity(-1));
     }
 
     private void setupToolbar() {
@@ -96,12 +100,7 @@ public class ProductViewActivity extends BaseActivity {
         TextView tv = new TextView(this);
         tv.setLayoutParams(lp);
         tv.setGravity(Gravity.CENTER);
-
-        try {
-            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Merienda-Bold.ttf");
-            tv.setTypeface(tf);
-        } catch (Exception ignored) {}
-
+        tv.setTypeface(null, Typeface.BOLD);
         tv.setText(titleText);
         tv.setTextSize(20);
         tv.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -110,23 +109,24 @@ public class ProductViewActivity extends BaseActivity {
     }
 
     private void populateData() {
-        title.setText(_title);
-        description.setText(_description);
-        attribute.setText(_attribute);
+        if (title != null) title.setText(_title);
+        if (description != null) description.setText(_description);
+        if (attribute != null) attribute.setText(_attribute);
+        if (price != null) price.setText(String.format("$%s", _price));
 
-        price.setText(String.format("$%s", _price));
-
-        if (_discount != null && !_discount.isEmpty()) {
-            discount.setText(_discount);
-            discount.setVisibility(View.VISIBLE);
-        } else {
-            discount.setVisibility(View.GONE);
+        if (discount != null) {
+            if (_discount != null && !_discount.isEmpty()) {
+                discount.setText(_discount);
+                discount.setVisibility(View.VISIBLE);
+            } else {
+                discount.setVisibility(View.GONE);
+            }
         }
 
-        if (_image != null) {
+        if (_image != null && imageView != null) {
             Picasso.get().load(_image).error(R.drawable.no_image).into(imageView, new Callback() {
-                @Override public void onSuccess() { progressBar.setVisibility(View.GONE); }
-                @Override public void onError(Exception e) { progressBar.setVisibility(View.GONE); }
+                @Override public void onSuccess() { if(progressBar != null) progressBar.setVisibility(View.GONE); }
+                @Override public void onError(Exception e) { if(progressBar != null) progressBar.setVisibility(View.GONE); }
             });
         }
     }
@@ -152,7 +152,7 @@ public class ProductViewActivity extends BaseActivity {
     }
 
     private void updateQuantity(int delta) {
-        if (cartIndex == -1) return;
+        if (cartIndex == -1 || quantity == null) return;
 
         int currentQty = Integer.parseInt(quantity.getText().toString());
         int newQty = currentQty + delta;
@@ -180,14 +180,14 @@ public class ProductViewActivity extends BaseActivity {
     }
 
     private void showQuantityControls(String qty) {
-        addToCartLayout.setVisibility(View.GONE);
-        quantityLayout.setVisibility(View.VISIBLE);
-        quantity.setText(qty);
+        if (addToCartBtn != null) addToCartBtn.setVisibility(View.GONE);
+        if (quantityLayout != null) quantityLayout.setVisibility(View.VISIBLE);
+        if (quantity != null) quantity.setText(qty);
     }
 
     private void showAddToCartButton() {
-        addToCartLayout.setVisibility(View.VISIBLE);
-        quantityLayout.setVisibility(View.GONE);
+        if (addToCartBtn != null) addToCartBtn.setVisibility(View.VISIBLE);
+        if (quantityLayout != null) quantityLayout.setVisibility(View.GONE);
     }
 
     private void shareProduct() {
@@ -202,7 +202,9 @@ public class ProductViewActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.cart_action);
-        menuItem.setIcon(Converter.convertLayoutToImage(this, getCartCount(), R.drawable.ic_shopping_basket));
+        if (menuItem != null) {
+            menuItem.setIcon(Converter.convertLayoutToImage(this, getCartCount(), R.drawable.ic_shopping_basket));
+        }
         return true;
     }
 

@@ -1,37 +1,42 @@
 package com.semo.cisproject.campushub.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.google.gson.Gson;
 import com.semo.cisproject.campushub.R;
-import com.semo.cisproject.campushub.fragment.AddressFragment;
+import com.semo.cisproject.campushub.model.User;
+import com.semo.cisproject.campushub.util.LocalStorage;
 
 public class CheckoutActivity extends BaseActivity {
+
+    private TextView checkoutName, subtotalTv, taxTv, totalTv;
+    private Button confirmBtn;
+    private LocalStorage localStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
 
-        setupToolbar();
+        localStorage = new LocalStorage(this);
 
-        if (savedInstanceState == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_from_right, R.anim.slide_to_left);
-            ft.replace(R.id.content_frame, new AddressFragment());
-            ft.commit();
-        }
+        setupToolbar();
+        initializeViews();
+        populateCheckoutData();
     }
 
     private void setupToolbar() {
@@ -44,53 +49,77 @@ public class CheckoutActivity extends BaseActivity {
             final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
             actionBar.setHomeAsUpIndicator(upArrow);
 
-            applyCustomTitle(actionBar, "Checkout");
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            TextView tv = new TextView(this);
+            tv.setLayoutParams(lp);
+            tv.setGravity(Gravity.CENTER);
+            tv.setTypeface(null, Typeface.BOLD);
+            tv.setText("Secure Checkout");
+            tv.setTextSize(20);
+            tv.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            actionBar.setCustomView(tv);
         }
     }
 
-    private void applyCustomTitle(ActionBar actionBar, String title) {
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
+    private void initializeViews() {
+        checkoutName = findViewById(R.id.checkout_name);
+        subtotalTv = findViewById(R.id.checkout_subtotal);
+        taxTv = findViewById(R.id.checkout_tax);
+        totalTv = findViewById(R.id.checkout_total);
+        confirmBtn = findViewById(R.id.confirm_order_btn);
 
-        TextView tv = new TextView(this);
-        tv.setLayoutParams(lp);
-        tv.setGravity(Gravity.CENTER);
+        confirmBtn.setOnClickListener(v -> processDemoOrder());
+    }
 
-        try {
-            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Merienda-Bold.ttf");
-            tv.setTypeface(tf);
-        } catch (Exception e) {
-            tv.setTypeface(null, Typeface.BOLD);
+    private void populateCheckoutData() {
+        String userStr = localStorage.getUserLogin();
+        if (userStr != null && !userStr.isEmpty()) {
+            try {
+                User user = new Gson().fromJson(userStr, User.class);
+                if (user.getName() != null) {
+                    checkoutName.setText(user.getName());
+                }
+            } catch (Exception ignored) {}
         }
 
-        tv.setText(title);
-        tv.setTextSize(20);
-        tv.setTextColor(getResources().getColor(R.color.colorPrimary));
+        double subtotal = getTotalPrice();
+        double tax = subtotal * 0.07;
+        double total = subtotal + tax;
 
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(tv);
+        subtotalTv.setText(String.format("$%.2f", subtotal));
+        taxTv.setText(String.format("$%.2f", tax));
+        totalTv.setText(String.format("$%.2f", total));
+    }
+
+    private void processDemoOrder() {
+        ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Processing Payment securely...");
+        pd.setCancelable(false);
+        pd.show();
+
+        new Handler().postDelayed(() -> {
+            pd.dismiss();
+            localStorage.deleteCart();
+
+            Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("ORDER_SUCCESS", true);
+            startActivity(intent);
+            finish();
+        }, 2000);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            goToCart();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        goToCart();
-    }
-
-    private void goToCart() {
-        Intent intent = new Intent(CheckoutActivity.this, CartActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-        finish();
     }
 }

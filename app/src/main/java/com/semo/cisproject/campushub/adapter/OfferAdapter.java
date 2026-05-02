@@ -62,9 +62,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.MyViewHolder
                             holder.progressBar.setVisibility(View.GONE);
                         }
                     });
-        } else if (product.getImageRes() != 0) {
-            holder.imageView.setImageResource(product.getImageRes());
-            holder.progressBar.setVisibility(View.GONE);
         } else {
             holder.progressBar.setVisibility(View.GONE);
             holder.imageView.setImageResource(R.drawable.no_image);

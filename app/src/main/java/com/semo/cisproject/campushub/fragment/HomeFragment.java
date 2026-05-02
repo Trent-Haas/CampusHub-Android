@@ -22,8 +22,7 @@ public class HomeFragment extends Fragment {
 
     private Data data;
 
-    public HomeFragment() {
-    }
+    public HomeFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +31,6 @@ public class HomeFragment extends Fragment {
         data = new Data();
 
         setupRecyclerViews(view);
-
 
         return view;
     }

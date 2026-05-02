@@ -1,10 +1,8 @@
 package com.semo.cisproject.campushub.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.semo.cisproject.campushub.R;
@@ -58,13 +57,12 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
         login = view.findViewById(R.id.already_user);
         terms_conditions = view.findViewById(R.id.terms_conditions);
         progressDialog = new ProgressDialog(getContext());
-        @SuppressLint("ResourceType")
-        XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
-        try {
-            ColorStateList csl = ColorStateList.createFromXml(getResources(), xrp);
+
+        ColorStateList csl = ContextCompat.getColorStateList(getContext(), R.color.text_selector);
+        if (csl != null) {
             login.setTextColor(csl);
             terms_conditions.setTextColor(csl);
-        } catch (Exception ignored) {}
+        }
     }
 
     private void setListeners() {
@@ -85,49 +83,58 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
         String getEmailId = emailId.getText().toString().trim().toLowerCase();
         String getMobileNumber = mobileNumber.getText().toString().trim();
         String getPassword = password.getText().toString();
+
         Pattern p = Pattern.compile(Utils.regEx);
         Matcher m = p.matcher(getEmailId);
 
         if (getFullName.length() == 0) {
-            fullName.setError("Enter your name");
-            fullName.requestFocus(); return;
+            fullName.setError("Enter Your Name");
+            fullName.requestFocus();
+            return;
         }
         if (getEmailId.length() == 0) {
             emailId.setError("Enter your email");
-            emailId.requestFocus(); return;
+            emailId.requestFocus();
+            return;
         }
         if (!m.find()) {
             emailId.setError("Enter a valid email");
-            emailId.requestFocus(); return;
-        }
-        if (!SecurityUtils.isEduEmail(getEmailId)) {
-            emailId.setError("Only .edu email addresses are allowed");
-            emailId.requestFocus(); return;
+            emailId.requestFocus();
+            return;
         }
         if (getMobileNumber.length() == 0) {
             mobileNumber.setError("Enter your mobile number");
-            mobileNumber.requestFocus(); return;
+            mobileNumber.requestFocus();
+            return;
         }
         if (!SecurityUtils.isStrongEnoughPassword(getPassword)) {
             password.setError("Password must be at least 6 characters");
-            password.requestFocus(); return;
+            password.requestFocus();
+            return;
         }
         if (!terms_conditions.isChecked()) {
             new CustomToast().Show_Toast(getActivity(), view, "Accept Terms & Conditions");
             return;
         }
+
+        boolean isStudent = getEmailId.endsWith(".edu");
         String hashedPassword = SecurityUtils.sha256(getPassword);
+
         user = new User();
         user.setId("1");
         user.setName(getFullName);
         user.setEmail(getEmailId);
         user.setMobile(getMobileNumber);
-        user.setPassword(hashedPassword);
-        user.setDiscountTier("student");
+        user.setPasswordHash(hashedPassword);
+        user.setStudentVerified(isStudent ? 1 : 0);
+        user.setDiscountTier(isStudent ? "student" : "none");
+        user.setDiscountUsed(0);
+
         gson = new Gson();
         String userString = gson.toJson(user);
         localStorage = new LocalStorage(getContext());
         localStorage.createUserLoginSession(userString);
+
         progressDialog.setMessage("Registering Data....");
         progressDialog.show();
         new Handler().postDelayed(() -> {

@@ -143,6 +143,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
             vibrate(200);
             return;
         }
+
         progressDialog.setMessage("Please Wait....");
         progressDialog.show();
         new Handler().postDelayed(() -> {
@@ -151,18 +152,22 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                     new CustomToast().Show_Toast(getActivity(), view, "Please register first.");
                     return;
                 }
+
                 String inputHash = SecurityUtils.sha256(getPassword);
-                String storedHash = user.getPassword();
+                String storedHash = user.getPasswordHash();
+
                 boolean emailMatches = SecurityUtils.safeEquals(
                         user.getEmail() == null ? "" : user.getEmail().trim().toLowerCase(),
                         getEmailId.toLowerCase()
                 );
                 boolean passwordMatches = SecurityUtils.safeEquals(storedHash, inputHash);
+
                 if (!emailMatches || !passwordMatches) {
                     new CustomToast().Show_Toast(getActivity(), view, "Please check email or password.");
                     vibrate(200);
                     return;
                 }
+
                 startActivity(new Intent(getActivity(), MainActivity.class));
                 getActivity().finish();
                 getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
