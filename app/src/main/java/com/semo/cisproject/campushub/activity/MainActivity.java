@@ -69,10 +69,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (getIntent() != null && getIntent().getBooleanExtra("ORDER_SUCCESS", false)) {
             showSuccessBanner();
         }
+
+        View logoutButton = findViewById(R.id.footer_text);
+        if (logoutButton != null) {
+            logoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    drawer.closeDrawer(GravityCompat.START);
+                    performLogout();
+                }
+            });
+        }
     }
 
     private void showSuccessBanner() {
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Order Confirmed! Receipt sent to your student email.", Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Order Confirmed! Receipt sent to your email.", Snackbar.LENGTH_INDEFINITE);
         View view = snackbar.getView();
         view.setBackgroundColor(Color.parseColor("#4CAF50"));
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
@@ -88,7 +99,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Fragment selectedFragment = null;
         String title = item.getTitle() != null ? item.getTitle().toString() : "";
 
-        // Add the "Search" check here
         if (title.contains("Home") || title.contains("Search")) {
             selectedFragment = new HomeFragment();
         }
@@ -102,6 +112,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             startActivity(new Intent(this, CartActivity.class));
             drawer.closeDrawer(GravityCompat.START);
             return true;
+        } else if (title.contains("Logout") || title.contains("Log Out")) {
+            performLogout();
+            return true;
         }
 
         if (selectedFragment != null) {
@@ -109,5 +122,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void performLogout() {
+        if (localStorage != null) {
+            localStorage.deleteCart();
+        }
+
+        Intent intent = new Intent(MainActivity.this, LoginRegisterActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }
