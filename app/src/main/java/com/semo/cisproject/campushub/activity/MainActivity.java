@@ -88,7 +88,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Fragment selectedFragment = null;
         String title = item.getTitle() != null ? item.getTitle().toString() : "";
 
-        if (title.contains("Home")) selectedFragment = new HomeFragment();
+        // Add the "Search" check here
+        if (title.contains("Home") || title.contains("Search")) {
+            selectedFragment = new HomeFragment();
+        }
         else if (title.contains("New Products")) selectedFragment = new NewProductFragment();
         else if (title.contains("Profile")) selectedFragment = new ProfileFragment();
         else if (title.contains("Offers")) selectedFragment = new OffersFragment();

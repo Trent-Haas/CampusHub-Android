@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
+
     public List<Product> getNewList() {
         List<Product> list = new ArrayList<>();
         list.add(new Product("1", "MacBook Pro M2", "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80", "1299.00", "Electronics", "10%"));
@@ -28,8 +29,9 @@ public class Data {
     public List<Product> getOfferList() {
         List<Product> list = new ArrayList<>();
         list.add(new Product("11", "University Hoodie", "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80", "35.00", "Apparel", "20%"));
-        list.add(new Product("12", "Dorm Microwave", "https://images.unsplash.com/photo-1585659722983-39cb3ee8ee86?auto=format&fit=crop&w=800&q=80", "65.00", "Appliances", "10%"));
-        list.add(new Product("13", "Desk Lamp", "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80", "24.00", "Furniture", "15%"));
+        // UPDATED MICROWAVE LINK BELOW
+        list.add(new Product("12", "Dorm Microwave", "https://images.unsplash.com/photo-1585232004423-244e0e6904e3?auto=format&fit=crop&w=800&q=80", "65.00", "Appliances", "10%"));
+        list.add(new Product("13", "Desk Lamp", "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&w=800&q=80", "24.00", "Furniture", "15%"));
         return list;
     }
 

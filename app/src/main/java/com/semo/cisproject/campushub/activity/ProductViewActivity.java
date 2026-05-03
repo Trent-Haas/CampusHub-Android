@@ -14,9 +14,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import java.util.ArrayList;
 import androidx.appcompat.app.ActionBar;
-
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.helper.Converter;
 import com.semo.cisproject.campushub.model.Cart;
@@ -133,6 +132,11 @@ public class ProductViewActivity extends BaseActivity {
 
     private void checkCartStatus() {
         cartList = getCartList();
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+        }
+
+        cartIndex = -1;
         for (int i = 0; i < cartList.size(); i++) {
             if (cartList.get(i).getId().equalsIgnoreCase(_id)) {
                 cartIndex = i;
@@ -144,6 +148,7 @@ public class ProductViewActivity extends BaseActivity {
     }
 
     private void addNewItemToCart() {
+        if (cartList == null) cartList = new ArrayList<>();
         Cart cartItem = new Cart(_id, _title, _image, "$", _price, _attribute, "1", _price);
         cartList.add(cartItem);
         saveCartToStorage();
@@ -159,7 +164,7 @@ public class ProductViewActivity extends BaseActivity {
 
         if (newQty > 0) {
             double unitPrice = Double.parseDouble(_price);
-            String subTotal = String.valueOf(unitPrice * newQty);
+            String subTotal = String.format("%.2f", unitPrice * newQty);
 
             cartList.get(cartIndex).setQuantity(String.valueOf(newQty));
             cartList.get(cartIndex).setSubTotal(subTotal);

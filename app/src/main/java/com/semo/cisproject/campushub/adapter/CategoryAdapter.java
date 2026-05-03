@@ -8,17 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.semo.cisproject.campushub.R;
 import com.semo.cisproject.campushub.activity.ProductActivity;
 import com.semo.cisproject.campushub.model.Category;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
@@ -43,11 +40,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
         if (tag != null && tag.equalsIgnoreCase("Home")) {
-            itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.row_home_category, parent, false);
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_home_category, parent, false);
         } else {
-            itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.row_category, parent, false);
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_category, parent, false);
         }
         return new MyViewHolder(itemView);
     }
@@ -55,25 +50,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Category category = categoryList.get(position);
-
         holder.title.setText(category.getTitle());
 
         if (category.getImage() != null && !category.getImage().isEmpty()) {
-            Picasso.get()
-                    .load(category.getImage())
-                    .placeholder(R.drawable.no_image)
-                    .error(R.drawable.no_image)
-                    .into(holder.imageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            holder.progressBar.setVisibility(View.GONE);
-                        }
-                    });
+            Picasso.get().load(category.getImage()).error(R.drawable.no_image).into(holder.imageView, new Callback() {
+                @Override public void onSuccess() { holder.progressBar.setVisibility(View.GONE); }
+                @Override public void onError(Exception e) { holder.progressBar.setVisibility(View.GONE); }
+            });
         } else {
             holder.imageView.setImageResource(R.drawable.no_image);
             holder.progressBar.setVisibility(View.GONE);
@@ -81,7 +64,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         View.OnClickListener clickListener = v -> {
             Intent intent = new Intent(context, ProductActivity.class);
-            intent.putExtra("category_id", category.getId());
+            // Ensure this matches the key in ProductActivity
             intent.putExtra("category_title", category.getTitle());
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
@@ -95,8 +78,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public int getItemCount() {
         if (categoryList == null) return 0;
         if (tag != null && tag.equalsIgnoreCase("Home")) {
-            if (categoryList.size() >= 6) return 6;
-            if (categoryList.size() > 3) return 3;
+            return Math.min(categoryList.size(), 6);
         }
         return categoryList.size();
     }

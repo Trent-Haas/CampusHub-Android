@@ -74,71 +74,37 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         final Product product = productList.get(position);
-        cartList = ((BaseActivity) context).getCartList();
 
-        holder.title.setText(product.getTitle());
-        holder.offer.setText(product.getDiscount());
-        holder.attribute.setText(product.getAttribute());
-        holder.currency.setText("$");
-        holder.price.setText(product.getPrice());
-
-        if (product.getDiscount() == null || product.getDiscount().isEmpty()) {
-            holder.offer.setVisibility(View.GONE);
-        } else {
-            holder.offer.setVisibility(View.VISIBLE);
+        if (holder.title != null) {
+            holder.title.setText(product.getTitle());
         }
 
-        Picasso.get()
-                .load(product.getImage())
-                .placeholder(R.drawable.no_image)
-                .error(R.drawable.no_image)
-                .into(holder.imageView, new Callback() {
-                    @Override
-                    public void onSuccess() { holder.progressBar.setVisibility(View.GONE); }
-                    @Override
-                    public void onError(Exception e) { holder.progressBar.setVisibility(View.GONE); }
-                });
+        if (holder.price != null) {
+            holder.price.setText("$" + product.getPrice());
+        }
 
-        updateCartUI(holder, product);
+        if (holder.attribute != null) {
+            holder.attribute.setText(product.getAttribute());
+        }
 
-        holder.plus.setOnClickListener(v -> updateQuantity(holder, product, 1, position));
-        holder.minus.setOnClickListener(v -> updateQuantity(holder, product, -1, position));
+        if (product.getImage() != null && holder.imageView != null) {
+            Picasso.get()
+                    .load(product.getImage())
+                    .error(R.drawable.no_image)
+                    .into(holder.imageView);
+        }
 
-        holder.addToCart.setOnClickListener(v -> {
-            String qty = holder.quantity.getText().toString();
-            if (!qty.equals("0")) {
-                double price = Double.parseDouble(product.getPrice());
-                double subTotal = price * Integer.parseInt(qty);
-
-                Cart cartItem = new Cart(product.getId(), product.getTitle(), product.getImage(), "$",
-                        product.getPrice(), product.getAttribute(), qty, String.valueOf(subTotal));
-
-                cartList = ((BaseActivity) context).getCartList();
-                cartList.add(cartItem);
-                saveCart();
-
-                if (context instanceof AddorRemoveCallbacks) {
-                    ((AddorRemoveCallbacks) context).onAddProduct();
-                }
-                notifyItemChanged(position);
-            } else {
-                Toast.makeText(context, "Please Add Quantity", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        holder.cardView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductViewActivity.class);
             intent.putExtra("id", product.getId());
             intent.putExtra("title", product.getTitle());
             intent.putExtra("image", product.getImage());
             intent.putExtra("price", product.getPrice());
-            intent.putExtra("currency", "$");
+            intent.putExtra("description", product.getDescription());
             intent.putExtra("attribute", product.getAttribute());
             intent.putExtra("discount", product.getDiscount());
-            intent.putExtra("description", product.getDescription());
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
         });
     }

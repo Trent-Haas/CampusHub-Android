@@ -28,6 +28,7 @@ public class CartActivity extends BaseActivity {
     private ImageView emptyCart;
     private LinearLayout checkoutLL;
     private TextView totalPrice;
+    private String mMenuState = "SHOW_MENU";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +76,16 @@ public class CartActivity extends BaseActivity {
 
     @Override
     public void updateTotalPrice() {
-        if (totalPrice != null) totalPrice.setText(String.format("$%.2f", getTotalPrice()));
-        if (cartList.isEmpty()) {
+        if (totalPrice != null) {
+            totalPrice.setText(String.format("$%.2f", getTotalPrice()));
+        }
+
+        if (cartList == null || cartList.isEmpty()) {
+            mMenuState = "HIDE_MENU";
             if (emptyCart != null) emptyCart.setVisibility(View.VISIBLE);
             if (checkoutLL != null) checkoutLL.setVisibility(View.GONE);
         } else {
+            mMenuState = "SHOW_MENU";
             if (emptyCart != null) emptyCart.setVisibility(View.GONE);
             if (checkoutLL != null) checkoutLL.setVisibility(View.VISIBLE);
         }
@@ -87,7 +93,7 @@ public class CartActivity extends BaseActivity {
     }
 
     public void onCheckoutClicked(View view) {
-        if (!cartList.isEmpty()) {
+        if (cartList != null && !cartList.isEmpty()) {
             startActivity(new Intent(this, CheckoutActivity.class));
         }
     }
@@ -96,7 +102,10 @@ public class CartActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cart_menu, menu);
         MenuItem item = menu.findItem(R.id.cart_delete);
-        if (item != null) item.setVisible(!cartList.isEmpty());
+
+        if (item != null) {
+            item.setVisible(!mMenuState.equalsIgnoreCase("HIDE_MENU"));
+        }
         return true;
     }
 
@@ -108,8 +117,12 @@ public class CartActivity extends BaseActivity {
                     .setMessage("Remove all items?")
                     .setPositiveButton("Clear All", (dialog, which) -> {
                         localStorage.deleteCart();
-                        cartList.clear();
-                        adapter.notifyDataSetChanged();
+                        if (cartList != null) {
+                            cartList.clear();
+                        }
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                        }
                         updateTotalPrice();
                     })
                     .setNegativeButton("Cancel", null).show();
